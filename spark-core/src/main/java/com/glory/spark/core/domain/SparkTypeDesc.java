@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2025. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
+package com.glory.spark.core.domain;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.glory.spark.core.context.SparkContext;
+import com.glory.spark.core.utils.DateUtils;
+import jakarta.annotation.Nonnull;
+import org.springframework.util.Assert;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * @author : YY
+ * @date : 2025/11/3
+ * @descprition :
+ *
+ */
+
+@SuppressWarnings({"rawtypes","unchecked"})
+public class SparkTypeDesc implements PropertyDesc{
+
+    private String sparkCode;
+    private String type;
+    private boolean enabled = true;
+    private String exceptionStrategy;
+    private LocalDateTime startEffectiveTime;
+    private LocalDateTime endEffectiveTime;
+    private final Map<String,Object> properties = new HashMap<>(16);
+    private SparkContext context;
+    public String getSparkCode() {
+        return sparkCode;
+    }
+
+    public void setSparkCode(String sparkCode) {
+        this.sparkCode = sparkCode;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getExceptionStrategy() {
+        return exceptionStrategy;
+    }
+
+    public void setExceptionStrategy(String exceptionStrategy) {
+        this.exceptionStrategy = exceptionStrategy;
+    }
+
+    public LocalDateTime getStartEffectiveTime() {
+        return startEffectiveTime;
+    }
+
+    public void setStartEffectiveTime(LocalDateTime startEffectiveTime) {
+        if (null !=this.endEffectiveTime && null != startEffectiveTime){
+            Assert.isTrue(startEffectiveTime.isAfter(endEffectiveTime),"StartTime greater than EndTime.");
+        }
+        this.startEffectiveTime = startEffectiveTime;
+    }
+
+    public LocalDateTime getEndEffectiveTime() {
+        return endEffectiveTime;
+    }
+
+    public void setEndEffectiveTime(LocalDateTime endEffectiveTime) {
+        if (null !=this.startEffectiveTime && null != endEffectiveTime){
+            Assert.isTrue(endEffectiveTime.isBefore(this.startEffectiveTime),"EndTimme less than StartTime.");
+        }
+        this.endEffectiveTime = endEffectiveTime;
+    }
+
+    @JsonIgnore
+    public boolean isEffective(LocalDateTime dateTime){
+        return isEnabled()&&DateUtils.isEffective(startEffectiveTime,endEffectiveTime,dateTime);
+    }
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(@Nonnull Map<String, Object> properties) {
+        this.properties.putAll(properties);
+    }
+
+    @JsonIgnore
+    public SparkTypeDesc addProperty(@Nonnull String key, @Nonnull Object value){
+        this.properties.put(key,value);
+        return this;
+    }
+
+    @Override
+    @JsonIgnore
+    public Object getValue(String key) {
+        return properties.get(key);
+    }
+    @JsonIgnore
+    public SparkContext getContext() {
+        return context;
+    }
+
+    @JsonIgnore
+    public void setContext(SparkContext context) {
+        this.context = context;
+    }
+
+    @JsonIgnore
+    public String identity(){
+        return String.format("TYPE[%s-%s]",sparkCode,type);
+    }
+
+    @JsonIgnore
+    public <T> SparkContext<T> copy(){
+        SparkContext<T> sparkContext = context.copy();
+        sparkContext.setProperties(properties);
+        sparkContext.setType(type);
+        sparkContext.setSnapshotInfo(context.getSnapshotInfo());
+        Optional.ofNullable(exceptionStrategy).ifPresent(sparkContext::setExceptionStrategy);
+        return sparkContext;
+    }
+}
