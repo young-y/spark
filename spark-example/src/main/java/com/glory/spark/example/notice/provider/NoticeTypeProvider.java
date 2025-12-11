@@ -27,19 +27,20 @@ import java.util.List;
 public class NoticeTypeProvider implements TypeProvider {
     @Override
     public <T> List<SparkTypeDesc> provide(SparkContext<T> context) {
-        return List.of(generate(context.getSparkCode()));
+        return generate(context);
     }
 
-    private SparkTypeDesc generate(String sparkCode){
+    private<T> List<SparkTypeDesc> generate(SparkContext<T> context){
         //TODO test
         SparkTypeDesc desc = new SparkTypeDesc();
-        desc.setSparkCode(sparkCode);
+        desc.setSparkCode(context.getSparkCode());
         desc.setType(NoticeConfig.NOTICE_TYPE);
-        return desc;
+		desc.setContext(context);
+		SparkTypeDesc desc1 = new SparkTypeDesc();
+		desc1.setSparkCode(context.getSparkCode());
+		desc1.setType("test");
+		desc1.setContext(context);
+        return List.of(desc,desc1);
     }
 
-    @Override
-    public List<String> supportTypes() {
-        return List.of(NoticeConfig.NOTICE_TYPE);
-    }
 }

@@ -27,8 +27,6 @@ public interface SparkCodeSupport extends TenantSupport{
     }
 
     default boolean match(SparkContext<?> context){
-        return  match(supportTenants(),null)
-                && match(supportTypes(), context.getType())
-                && match(supportSparkCodes(), context.getSparkCode()) ;
+        return  match(supportTenants(),null) && TenantSupport.super.match(context);
     }
 }

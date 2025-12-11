@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import static com.glory.spark.core.context.SparkConstant.MISS_DEFAULT_ORDER;
+
 /**
  * @author : YY
  * @date : 2025/10/29
@@ -40,8 +42,8 @@ public abstract class AbstractDelegate<S extends Selector>  implements Applicati
     protected Comparator<S> comparator=(o1, o2)->{
         Order od1= o1.getClass().getAnnotation(Order.class);
         Order od2= o2.getClass().getAnnotation(Order.class);
-        int s1= null!= od1?od1.value():Integer.MIN_VALUE;
-        int s2= null!= od2?od2.value():Integer.MIN_VALUE;
+        int s1= null!= od1?od1.value(): MISS_DEFAULT_ORDER;
+        int s2= null!= od2?od2.value(): MISS_DEFAULT_ORDER;
         return Comparators.comparable().compare(s1,s2);
 };
 

@@ -11,8 +11,8 @@ package com.glory.spark.core.domain.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import jakarta.annotation.Nonnull;
-import org.springframework.core.convert.converter.Converter;
+import com.glory.foundation.domain.PersistableEnum;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * @author : YY
@@ -21,43 +21,57 @@ import org.springframework.core.convert.converter.Converter;
  *
  */
 
-public enum SourceFrom implements PersistableEnum<Integer>{
-    Online("online",1)  //option of flow
-    ,Batch("batch",2)  //batch schedule
-    ,Compensate("compensate",3)  //re-generate  after
-    ;
+public enum SourceFrom implements PersistableEnum<Integer> {
+	Online("online", 1)  //option of flow
+	, Batch("batch", 2)  //batch schedule
+	, Compensate("compensate", 3)  //re-generate  after
+	;
 
-    private final String name;
-    private final Integer value;
-    private SourceFrom(String name,Integer value){
-        this.name = name;
-        this.value = value;
-    }
+	private final String name;
+	private final Integer value;
 
-    public Integer getValue() {
-        return value;
-    }
+	private SourceFrom(String name, Integer value) {
+		this.name = name;
+		this.value = value;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Integer getValue() {
+		return value;
+	}
 
-    @Override
-    @JsonValue
-    public Integer value() {
-        return getValue();
-    }
+	public String getName() {
+		return name;
+	}
 
-    @JsonCreator
-    public static SourceFrom fromPersistableValue(int value){
-        return PersistableEnum.valueOf(value, SourceFrom.class);
-    }
+	@Override
+	@JsonValue
+	public Integer value() {
+		return getValue();
+	}
 
-    public static class SourceFromConverter implements Converter<Integer,SourceFrom> {
+	@JsonCreator
+	public static SourceFrom fromPersistableValue(int value) {
+		return PersistableEnum.valueOf(value, SourceFrom.class);
+	}
 
-        @Override
-        public SourceFrom convert(@Nonnull Integer source) {
-            return SourceFrom.fromPersistableValue(source);
-        }
-    }
+	public static class SourceFromConverter implements AttributeConverter<SourceFrom, Integer> {
+
+		/**
+		 * @param attribute
+		 * @return
+		 */
+		@Override
+		public Integer convertToDatabaseColumn(SourceFrom attribute) {
+			return attribute.getValue();
+		}
+
+		/**
+		 * @param dbData
+		 * @return
+		 */
+		@Override
+		public SourceFrom convertToEntityAttribute(Integer dbData) {
+			return SourceFrom.fromPersistableValue(dbData);
+		}
+	}
 }

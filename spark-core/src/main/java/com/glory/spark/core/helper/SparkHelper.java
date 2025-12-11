@@ -9,7 +9,10 @@
 package com.glory.spark.core.helper;
 
 
+import jakarta.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -25,18 +28,22 @@ import java.util.UUID;
 @Component
 public class SparkHelper {
     @Value("${spring.application.name}")
-    private String appName;
-    @Value("${server.context-path}:")
-    private String contextPath;
-    @Value("${spark.snapshot.master-app-name}:")
-    private String masterAppName;
-    @Value("${spark.snapshot.enabled}:true")
-    private boolean snapshot;
-    @Value("{spark.snapshot.deploy.master}:true")
-    private boolean deployMaster;
-    @Value("{spark.snapshot.develop.local}:false")
-    private boolean develop;
+    private String appName;//current app name
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;//current app contextPath if setting
+    @Value("${spark.snapshot.master-app-name:}")
+    private String masterAppName;// it' the app name of master node  if deploy master mode.
+	@Value("${spark.content.app-name:}")
+	private String contentAppName;
+	@Value("${spark.snapshot.enabled:true}")
+    private boolean snapshot;//whether record the snapshot data
+    @Value("${spark.snapshot.deploy.master:true}")
+    private boolean deployMaster;// if deploy master
 
+    @Value("${spark.filter.compensate.validate:false}")
+    private boolean validateCompensate;
+	@Autowired
+	private Environment environment;
     public String getAppName() {
         return appName;
     }
@@ -46,9 +53,11 @@ public class SparkHelper {
     }
 
     public String getMasterAppName() {
-        if (deployMaster){
+        if (deployMaster){//the master app name can't empty when deploy is master mode
             Assert.hasLength(masterAppName,"At master mode,the masterAppName can't empty.");
-        }
+        }else {
+			return appName;//when distributed, the master is current app
+		}
         return masterAppName;
     }
 
@@ -56,19 +65,28 @@ public class SparkHelper {
         return deployMaster;
     }
 
-    public boolean isDevelop() {
-        return develop;
-    }
-
     public boolean isSnapshot() {
         return snapshot;
     }
 
-    public boolean isMasterApp(){
-        return deployMaster&&getAppName().equalsIgnoreCase(getMasterAppName());
+	public String getContentAppName() {
+		return contentAppName;
+	}
+
+	/**
+	 *
+	 * @param appName
+	 * @return
+	 */
+	public boolean isCurrentApp(@Nonnull String appName){
+		return appName.equalsIgnoreCase(getAppName());
+	}
+
+    public boolean isValidateCompensate() {
+        return validateCompensate;
     }
 
     public String nextSerialId(){
-        return UUID.fromString("SPARK").toString();
+        return UUID.randomUUID().toString();
     }
 }

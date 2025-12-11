@@ -10,19 +10,23 @@ package com.glory.spark.core.context;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.glory.spark.core.domain.PropertyDesc;
+import com.glory.foundation.domain.PropertyDesc;
 import com.glory.spark.core.domain.SparkTaskDesc;
 import com.glory.spark.core.domain.SparkTypeDesc;
-import com.glory.spark.core.domain.snapshot.SnapshotInfo;
+import com.glory.spark.core.domain.type.ConditionMode;
+import com.glory.spark.core.domain.type.TaskStatus;
+import com.glory.spark.core.snapshot.domain.bo.SnapshotBo;
+import com.glory.spark.core.domain.type.RetryStrategy;
 import com.glory.spark.core.domain.type.SourceFrom;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-/**
+/**spark flow context
  * @author : YY
  * @date : 2025/10/28
  * @descprition :
@@ -32,18 +36,22 @@ import java.util.Map;
 @SuppressWarnings({"rawtypes","unchecked"})
 public class SparkContext <T> implements PropertyDesc {
 
-    private T context;
-    private Object refObj;
-    private String sparkCode;
-    private String taskCode;
-    private String type;
-    private SourceFrom source = SourceFrom.Online;
+    private T context;//master object of flow context
+    private Object refObj;//the second object
+    private String sparkCode;//require,the only identify of triggering
+    private String taskCode;//unique identification of specific task
+    private String type;//task category
+	private String serialId;
+	private int conditionMode = SparkConstant.PARAMETER_MODE_SPARK;
+    private SourceFrom source = SourceFrom.Online;//trigger source
+    private RetryStrategy retryStrategy;//compensate category
     private LocalDateTime processDate;
     private SparkTypeDesc typeDesc;
     private SparkTaskDesc taskDesc;
+	private final Map<String,SparkTaskDesc> taskMap = new HashMap<>();
     private final Map<String, Object> properties = new HashMap<>(8);
     private String exceptionStrategy ;
-    private SnapshotInfo snapshotInfo;
+    private SnapshotBo snapshotBo;
     public T getContext() {
         return context;
     }
@@ -83,16 +91,38 @@ public class SparkContext <T> implements PropertyDesc {
         return type;
     }
 
-    public void setType(String type) {
+    public SparkContext<T>  setType(String type) {
         this.type = type;
+        return this;
     }
 
-    public SourceFrom getSource() {
+	public String getSerialId() {
+		if (!StringUtils.hasLength(serialId)){
+			serialId = UUID.randomUUID().toString();
+		}
+		return serialId;
+	}
+
+	public SparkContext<T> setSerialId(String serialId) {
+		this.serialId = serialId;
+		return this;
+	}
+
+	public SourceFrom getSource() {
         return source;
     }
 
     public SparkContext<T> setSource(SourceFrom source) {
         this.source = source;
+        return this;
+    }
+
+    public RetryStrategy getRetryStrategy() {
+        return retryStrategy;
+    }
+
+    public SparkContext<T> setRetryStrategy(RetryStrategy retryStrategy) {
+        this.retryStrategy = retryStrategy;
         return this;
     }
 
@@ -144,18 +174,46 @@ public class SparkContext <T> implements PropertyDesc {
     }
 
     public void setTaskDesc(SparkTaskDesc taskDesc) {
-        this.taskDesc = taskDesc;
+		Optional.ofNullable(taskDesc).ifPresent(task->{
+			Assert.isTrue(!taskMap.containsKey(task.identity()),task.identity()+" Task has been exist");
+			taskMap.put(task.identity(),task);
+			this.taskDesc = task;
+		});
+	}
+
+    public SnapshotBo getSnapshotInfo() {
+        return snapshotBo;
     }
 
-    public SnapshotInfo getSnapshotInfo() {
-        return snapshotInfo;
+	@JsonIgnore
+	public void updateSnapshotStatus(){
+		updateSnapshotStatus(TaskStatus.Success,null);
+	}
+	@JsonIgnore
+	public void updateSnapshotStatus(TaskStatus status,String message){
+		Optional.ofNullable(snapshotBo).ifPresent(bo->{
+			bo.setStatus(status);
+			bo.setMessage(message);
+		});
+	}
+
+    public void setSnapshotInfo(SnapshotBo snapshotBo) {
+        this.snapshotBo = snapshotBo;
     }
 
-    public void setSnapshotInfo(SnapshotInfo snapshotInfo) {
-        this.snapshotInfo = snapshotInfo;
-    }
+	public void addConditionMode(ConditionMode mode){
+		this.conditionMode |= mode.getCode();
+	}
 
-    public SparkContext<T> copy(){
+	public boolean isConditionMode(ConditionMode mode){
+		return mode.getCode() ==( this.conditionMode & mode.getCode());
+	}
+
+	public int getConditionMode() {
+		return conditionMode;
+	}
+
+	public SparkContext<T> copy(){
         SparkContext<T> c = new SparkContext<>();
         BeanUtils.copyProperties(this,c);
         return c;
@@ -164,12 +222,17 @@ public class SparkContext <T> implements PropertyDesc {
     @Override
     @JsonIgnore
     public Object getValue(String key) {
-        return properties;
+        if (null != taskDesc && taskDesc.getProperties().containsKey(key)){
+            return taskDesc.getValue(key);
+        } else if (null != typeDesc && typeDesc.getProperties().containsKey(key)) {
+            return typeDesc.getValue(key);
+        }
+        return properties.get(key);
     }
 
     public static SparkContext create(String sparkCode){
         SparkContext sparkContext = new SparkContext();
-        sparkContext.setContext(sparkCode);
+        sparkContext.setSparkCode(sparkCode);
         return sparkContext;
     }
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="T_SPARK_SNAPSHOT_202511" author="generated" runAlways="false" >
+        <preConditions onFail="WARN" onError="WARN">
+            <not>
+                <tableExists tableName="T_SPARK_SNAPSHOT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="T_SPARK_SNAPSHOT">
+            <column name="SNAPSHOT_ID" type="bigint"  remarks="snapshot id" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"  />
+            </column>
+            <column name="SPARK_CODE" type="varchar(200)" remarks="spark code">
+                <constraints nullable="false" />
+            </column>
+            <column name="SERIAL_ID" type="varchar(200)" remarks="spark serial identify"/>
+            <column name="APP_NAME" type="varchar(100)" remarks="app name containing the spark module">
+                <constraints nullable="false" />
+            </column>
+            <column name="CONTEXT_PATH" type="varchar(100)" remarks="contextPath of app"/>
+            <column name="TENANT" type="varchar(100)"  remarks="tenant code"/>
+            <column name="PROCESS_DATE" type="TIMESTAMP" remarks="process date for schedule "/>
+            <column name="SOURCE" type="int(3)" defaultValue="1" remarks="source of business">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="int(3)" defaultValue="0" remarks=" task result status ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGE" type="varchar(300)" remarks="exception message"/>
+            <column name="CONDITION_MODE" type="int(3)" defaultValue="1" remarks="bit of 1:sparkcode,2:type,4:taskcode"/>
+            <column name="CONTEXT_DATA" type="json"  remarks="json of context "/>
+            <column name="CONTEXT_TYPE" type="varchar(200)" remarks=" context class type string"/>
+            <column name="REF_OBJECT_DATA" type="json"  remarks="json of refObject "/>
+            <column name="REF_TYPE" type="varchar(200)" remarks=" ref object class type string"/>
+            <column name="DYNAMIC_FIELDS" type="json"/>
+            <column name="CREATE_BY" type="bigint"/>
+            <column name="MODIFIED_BY" type="bigint"/>
+            <column name="CREATE_TIME" type="TIMESTAMP"/>
+            <column name="MODIFIED_TIME" type="TIMESTAMP"/>
+
+        </createTable>
+
+    </changeSet>
+    <changeSet id="idx_snapshot_spark_code_202511" author="generated">
+        <createIndex tableName="T_SPARK_SNAPSHOT" indexName="idx_snapshot_spark_code">
+            <column name="spark_code"/>
+        </createIndex>
+    </changeSet>
+
+<!--    <changeSet id="add_column_snapshot_condition_mode" author="generated">-->
+<!--        <preConditions onError="WARN" onFail="WARN">-->
+<!--            <not>-->
+<!--                <columnExists tableName="T_SPARK_SNAPSHOT" columnName="CONDITION_MODE"/>-->
+<!--            </not>-->
+<!--        </preConditions>-->
+<!--        <addColumn tableName="T_SPARK_SNAPSHOT">-->
+<!--            <column name="CONDITION_MODE" type="int(3)" defaultValue="1" remarks="bit of 1:sparkcode,2:type,4:taskcode"/>-->
+<!--        </addColumn>-->
+<!--    </changeSet>-->
+
+</databaseChangeLog>

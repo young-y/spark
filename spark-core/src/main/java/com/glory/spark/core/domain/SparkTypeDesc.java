@@ -10,6 +10,7 @@ package com.glory.spark.core.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.glory.foundation.domain.PropertyDesc;
 import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.utils.DateUtils;
 import jakarta.annotation.Nonnull;
@@ -27,17 +28,19 @@ import java.util.Optional;
  *
  */
 
-@SuppressWarnings({"rawtypes","unchecked"})
-public class SparkTypeDesc implements PropertyDesc{
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class SparkTypeDesc implements PropertyDesc {
 
     private String sparkCode;
     private String type;
     private boolean enabled = true;
+    private boolean sync = true;
     private String exceptionStrategy;
     private LocalDateTime startEffectiveTime;
     private LocalDateTime endEffectiveTime;
-    private final Map<String,Object> properties = new HashMap<>(16);
-    private SparkContext context;
+    private final Map<String, Object> properties = new HashMap<>(16);
+    private transient SparkContext context;
+
     public String getSparkCode() {
         return sparkCode;
     }
@@ -62,6 +65,14 @@ public class SparkTypeDesc implements PropertyDesc{
         this.enabled = enabled;
     }
 
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
     public String getExceptionStrategy() {
         return exceptionStrategy;
     }
@@ -75,8 +86,8 @@ public class SparkTypeDesc implements PropertyDesc{
     }
 
     public void setStartEffectiveTime(LocalDateTime startEffectiveTime) {
-        if (null !=this.endEffectiveTime && null != startEffectiveTime){
-            Assert.isTrue(startEffectiveTime.isAfter(endEffectiveTime),"StartTime greater than EndTime.");
+        if (null != this.endEffectiveTime && null != startEffectiveTime) {
+            Assert.isTrue(startEffectiveTime.isAfter(endEffectiveTime), "StartTime greater than EndTime.");
         }
         this.startEffectiveTime = startEffectiveTime;
     }
@@ -86,16 +97,17 @@ public class SparkTypeDesc implements PropertyDesc{
     }
 
     public void setEndEffectiveTime(LocalDateTime endEffectiveTime) {
-        if (null !=this.startEffectiveTime && null != endEffectiveTime){
-            Assert.isTrue(endEffectiveTime.isBefore(this.startEffectiveTime),"EndTimme less than StartTime.");
+        if (null != this.startEffectiveTime && null != endEffectiveTime) {
+            Assert.isTrue(endEffectiveTime.isBefore(this.startEffectiveTime), "EndTimme less than StartTime.");
         }
         this.endEffectiveTime = endEffectiveTime;
     }
 
     @JsonIgnore
-    public boolean isEffective(LocalDateTime dateTime){
-        return isEnabled()&&DateUtils.isEffective(startEffectiveTime,endEffectiveTime,dateTime);
+    public boolean isEffective(LocalDateTime dateTime) {
+        return isEnabled() && DateUtils.isEffective(startEffectiveTime, endEffectiveTime, dateTime);
     }
+
     public Map<String, Object> getProperties() {
         return properties;
     }
@@ -105,8 +117,8 @@ public class SparkTypeDesc implements PropertyDesc{
     }
 
     @JsonIgnore
-    public SparkTypeDesc addProperty(@Nonnull String key, @Nonnull Object value){
-        this.properties.put(key,value);
+    public SparkTypeDesc addProperty(@Nonnull String key, @Nonnull Object value) {
+        this.properties.put(key, value);
         return this;
     }
 
@@ -115,27 +127,32 @@ public class SparkTypeDesc implements PropertyDesc{
     public Object getValue(String key) {
         return properties.get(key);
     }
+
     @JsonIgnore
     public SparkContext getContext() {
         return context;
     }
 
     @JsonIgnore
-    public void setContext(SparkContext context) {
+    public SparkTypeDesc setContext(SparkContext context) {
         this.context = context;
+        return this;
     }
 
     @JsonIgnore
-    public String identity(){
-        return String.format("TYPE[%s-%s]",sparkCode,type);
+    public String identity() {
+        return String.format("TYPE[%s-%s]", sparkCode, type);
     }
 
     @JsonIgnore
-    public <T> SparkContext<T> copy(){
+    public <T> SparkContext<T> copy() {
+        Assert.hasLength(type, "SparkType is empty.");
+        Assert.isTrue(null != context, "SparkContext is null.");
         SparkContext<T> sparkContext = context.copy();
-        sparkContext.setProperties(properties);
-        sparkContext.setType(type);
-        sparkContext.setSnapshotInfo(context.getSnapshotInfo());
+		this.setContext(sparkContext);
+        sparkContext.setTypeDesc(this)
+                .setType(type);
+//        sparkContext.setSnapshotInfo(context.getSnapshotInfo());
         Optional.ofNullable(exceptionStrategy).ifPresent(sparkContext::setExceptionStrategy);
         return sparkContext;
     }

@@ -9,9 +9,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
+        <module>glory-foundation</module>
+        <module>glory-client</module>
+        <module>glory-data</module>
         <module>spark-core</module>
         <module>spark-example</module>
         <module>spark-app</module>
+        <module>spark-content</module>
     </modules>
 
     <properties>
@@ -20,14 +24,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.3.4</spring.boot.version>
     </properties>
-
-<!--    <dependencies>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-web</artifactId>-->
-<!--            <version>${spring.boot.version}</version>-->
-<!--        </dependency>-->
-<!--    </dependencies>-->
 
     <dependencyManagement>
         <dependencies>
@@ -42,6 +38,26 @@
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
+                <groupId>com.glory.spark</groupId>
+                <artifactId>spark-content</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.glory</groupId>
+                <artifactId>glory-client</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.glory</groupId>
+                <artifactId>glory-data</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.glory</groupId>
+                <artifactId>glory-foundation</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.boot.version}</version>
@@ -52,7 +68,6 @@
                 <version>${spring.boot.version}</version>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
 </project>

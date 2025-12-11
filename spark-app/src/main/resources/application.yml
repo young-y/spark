@@ -2,7 +2,73 @@
 spring:
   application:
     name: spark
+  datasource:
+    url: jdbc:mysql://localhost:3306/spark
+#    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: yong2886
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/change-master.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MySQL5Dialect
+#    show-sql: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 
 server:
   port: 8080
-  context-path: spark
+  servlet:
+    context-path: /spark-demo
+spark:
+  launcher:
+    disabled: false
+  snapshot:
+    master-app-name: spark
+    disabled: false
+    deploy:
+      master: true
+  content:
+    app-name: spark1
+  http:
+    snapshot:
+      save: /test/save
+      find-by-id: /test/{snapshotId}/{includeDetail}
+      query: /test/query
+      detail:
+        save: /test/detail/save
+        find-by-id: /test/detail/{detailId}
+        find-snapshot-id: /test/detail/all/{snapshotId}
+        query: /test/detail/query
+        queryItems: /test/item/query
+        task-status: /test/detail/{taskCode}/{status}
+    compensate:
+      transmit: /test/compensate/transmit
+      process: /test/compensate/item/process
+    content:
+      save: /test/content/save
+      find: /test/content/find/{listId}
+      find-spark-status: /test/content/findBySparkCode/{sparkCode}/{status}
+      find-task-status: /test/content/findByTaskCode/{taskCode}/{status}
+      query: /test/content/query
+    track:
+      save: /test/content/track/save
+      find: /test/content/track/find/{trackId}
+      find-content-id: /test/content/track/find/{contentId}/{status}
+      query: /test/content/track/query
+    host:
+      spark1: http://localhost:8080/spark-demo
+      spark: http://localhost:8080/spark-demo
+  service:
+    snapshot:
+      find-detail-id: true
+    annotation:
+      save-person: true
+glory:
+  client:
+    http:
+      log: true

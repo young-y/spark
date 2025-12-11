@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <!--    <include file="T_M_MAGIC_PLAN_SCHEDULE.xml"/>-->
+    <!--    <include file="T_M_MAGIC_RULE.xml"/>-->
+    <!--    <include file="T_M_DYNAMIC_TRIGGER.xml"/>-->
+    <!--    <include file="T_M_CODE_MAP.xml"/>-->
+    <!--    <include file="T_M_CODE_ITEM.xml"/>-->
+</databaseChangeLog>

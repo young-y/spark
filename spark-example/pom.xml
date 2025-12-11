@@ -22,6 +22,9 @@
             <groupId>com.glory.spark</groupId>
             <artifactId>spark-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.glory.spark</groupId>
+            <artifactId>spark-content</artifactId>
+        </dependency>
     </dependencies>
-
 </project>

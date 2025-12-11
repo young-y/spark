@@ -9,6 +9,7 @@
 package com.glory.spark.core.component.base;
 
 
+import com.glory.foundation.context.AppContext;
 import com.glory.spark.core.context.SparkContext;
 
 import java.util.List;
@@ -27,8 +28,7 @@ public interface TenantSupport extends SparkSupport{
     }
 
     default boolean match(SparkContext<?> context){
-        return  match(supportTenants(),null)
-                && match(supportTypes(), context.getType());
+        return  match(supportTenants(), AppContext.getTenantCode()) && SparkSupport.super.match(context);
     }
 
 }

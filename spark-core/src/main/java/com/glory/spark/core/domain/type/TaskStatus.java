@@ -11,8 +11,8 @@ package com.glory.spark.core.domain.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import jakarta.annotation.Nonnull;
-import org.springframework.core.convert.converter.Converter;
+import com.glory.foundation.domain.PersistableEnum;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * @author : YY
@@ -21,44 +21,57 @@ import org.springframework.core.convert.converter.Converter;
  *
  */
 
-public enum TaskStatus implements PersistableEnum<Integer>{
-    Init("init",0)  //init
-    ,Success("success",1)  //success
-    ,Fail("fail",-1)  //fail
-    ,Compensate("compensate",2)
-    ;
+public enum TaskStatus implements PersistableEnum<Integer> {
+	Init("init", 0)  //init
+	, Success("success", 1)  //success
+	, Fail("fail", -1)  //fail
+	, Compensate("compensate", 2);
 
-    private final String name;
-    private final Integer value;
-    private TaskStatus(String name,Integer value){
-        this.name = name;
-        this.value = value;
-    }
+	private final String name;
+	private final Integer value;
 
-    public Integer getValue() {
-        return value;
-    }
+	private TaskStatus(String name, Integer value) {
+		this.name = name;
+		this.value = value;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Integer getValue() {
+		return value;
+	}
 
-    @Override
-    @JsonValue
-    public Integer value() {
-        return getValue();
-    }
+	public String getName() {
+		return name;
+	}
 
-    @JsonCreator
-    public static TaskStatus fromPersistableValue(int value){
-        return PersistableEnum.valueOf(value, TaskStatus.class);
-    }
+	@Override
+	@JsonValue
+	public Integer value() {
+		return getValue();
+	}
 
-    public static class TaskStatusConverter implements Converter<Integer,TaskStatus> {
+	@JsonCreator
+	public static TaskStatus fromPersistableValue(int value) {
+		return PersistableEnum.valueOf(value, TaskStatus.class);
+	}
 
-        @Override
-        public TaskStatus convert(@Nonnull Integer source) {
-            return TaskStatus.fromPersistableValue(source);
-        }
-    }
+	public static class TaskStatusConverter implements AttributeConverter<TaskStatus, Integer> {
+
+		/**
+		 * @param attribute
+		 * @return
+		 */
+		@Override
+		public Integer convertToDatabaseColumn(TaskStatus attribute) {
+			return attribute.getValue();
+		}
+
+		/**
+		 * @param dbData
+		 * @return
+		 */
+		@Override
+		public TaskStatus convertToEntityAttribute(Integer dbData) {
+			return TaskStatus.fromPersistableValue(dbData);
+		}
+	}
 }

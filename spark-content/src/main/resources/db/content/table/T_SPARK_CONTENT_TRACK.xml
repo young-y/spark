@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="T_SPARK_CONTENT_TRACK_202512" author="generated" runAlways="false" >
+        <preConditions onFail="WARN" onError="WARN">
+            <not>
+                <tableExists tableName="T_SPARK_CONTENT_TRACK"/>
+            </not>
+        </preConditions>
+        <createTable tableName="T_SPARK_CONTENT_TRACK">
+            <column name="TRACK_ID" type="bigint"  remarks="track id" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="CONTENT_ID" type="bigint" remarks="content id,ref from SparkContent">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SERIAL_ID" type="varchar(200)" remarks="serial number,batch number"/>
+            <column name="TENANT" type="varchar(200)" remarks="tenant code"/>
+            <column name="SOURCE" type="int(4)" defaultValue="0" remarks="source of business">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="int(4)" defaultValue="0" remarks=" content handle status ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CATEGORY" type="varchar(120)" remarks="the track category"/>
+            <column name="FILE" type="varchar(250)" remarks="the track file"/>
+            <column name="CONTENT" type="json" remarks="the track content "/>
+            <column name="TRACK_DATE" type="TIMESTAMP" remarks="track date "/>
+            <column name="INDEX" type="int" defaultValue="0" remarks="track index"/>
+
+            <column name="DYNAMIC_FIELDS" type="json"/>
+            <column name="CREATE_BY" type="bigint"/>
+            <column name="MODIFIED_BY" type="bigint"/>
+            <column name="CREATE_TIME" type="TIMESTAMP"/>
+            <column name="MODIFIED_TIME" type="TIMESTAMP"/>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

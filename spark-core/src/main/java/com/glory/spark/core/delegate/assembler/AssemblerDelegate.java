@@ -9,7 +9,7 @@
 package com.glory.spark.core.delegate.assembler;
 
 
-import com.glory.spark.core.component.assembler.SparkAssembler;
+import com.glory.spark.core.component.assembler.TaskAssembler;
 import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.delegate.base.AbstractDelegate;
 import com.glory.spark.core.domain.SparkResult;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @SuppressWarnings({"rawtypes","unchecked"})
 @Component
-public class AssemblerDelegate extends AbstractDelegate<SparkAssembler> {
+public class AssemblerDelegate extends AbstractDelegate<TaskAssembler> {
 
     public <E>SparkResult<E> assemble(SparkContext context ){
         return delegate(context).assemble(context);

@@ -9,7 +9,7 @@
 package com.glory.spark.core.delegate.exception;
 
 
-import com.glory.spark.core.component.exception.ExceptionHandler;
+import com.glory.spark.core.component.exception.ExceptionCapture;
 import com.glory.spark.core.delegate.base.AbstractDelegate;
 import com.glory.spark.core.exception.SparkException;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class ExceptionDelegate extends AbstractDelegate<ExceptionHandler> {
+public class ExceptionDelegate extends AbstractDelegate<ExceptionCapture> {
 
     public void handle(SparkException e){
         delegates(e.getContext()).forEach(h->{

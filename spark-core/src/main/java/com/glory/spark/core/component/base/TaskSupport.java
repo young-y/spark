@@ -28,9 +28,6 @@ public interface TaskSupport extends SparkCodeSupport{
 
 
     default boolean match(SparkContext<?> context){
-        return  match(supportTasks(), context.getTaskCode())
-                && match(supportTenants(),null)
-                && match(supportTypes(), context.getType())
-                && match(supportSparkCodes(), context.getSparkCode());
+        return  match(supportTasks(), context.getTaskCode()) &&SparkCodeSupport.super.match(context);
     }
 }

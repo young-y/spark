@@ -14,7 +14,9 @@ import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.delegate.base.AbstractDelegate;
 import com.glory.spark.core.domain.SparkTypeDesc;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,6 +30,12 @@ import java.util.List;
 public class ProviderDelegate extends AbstractDelegate<TypeProvider> {
 
     public <T>List<SparkTypeDesc> provide(SparkContext<T> context){
-        return delegate(context).provide(context);
+        for (TypeProvider provider:delegates(context)){
+            List<SparkTypeDesc> list = provider.provide(context);
+            if (!CollectionUtils.isEmpty(list)){
+                return list;
+            }
+        }
+        return List.of();
     }
 }

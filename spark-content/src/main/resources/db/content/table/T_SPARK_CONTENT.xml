@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="T_SPARK_CONTENT_202512" author="generated" runAlways="false" >
+        <preConditions onFail="WARN" onError="WARN">
+            <not>
+                <tableExists tableName="T_SPARK_CONTENT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="T_SPARK_CONTENT">
+            <column name="LIST_ID" type="bigint"  remarks="content id" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"  />
+            </column>
+            <column name="SPARK_CODE" type="varchar(200)" remarks="spark code">
+                <constraints nullable="false" />
+            </column>
+            <column name="TYPE" type="varchar(100)" remarks="spark controller type">
+                <constraints nullable="false" />
+            </column>
+            <column name="TASK_CODE" type="varchar(200)" remarks="task code">
+                <constraints nullable="false" />
+            </column>
+            <column name="CATEGORY" type="varchar(120)" remarks="the content category"/>
+            <column name="NAME" type="varchar(200)" remarks="the content name"/>
+            <column name="DESCRIPTION" type="varchar(500)" remarks="the content description"/>
+            <column name="MODULE" type="int(4)" remarks="spark serial identify"/>
+            <column name="SERIAL_ID" type="varchar(200)" remarks="spark serial identify"/>
+            <column name="TENANT" type="varchar(200)" remarks="tenant code"/>
+            <column name="TEMPLATE_CODE" type="varchar(200)" remarks="content template"/>
+            <column name="EXPIRE_DATE" type="TIMESTAMP" remarks="content expire date "/>
+            <column name="SOURCE" type="int(4)" defaultValue="0" remarks="source of business">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="int(4)" defaultValue="0" remarks=" content handle status ">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CONTENT" type="json"  remarks="json of content "/>
+            <column name="RECEIVERS" type="json" remarks=" list of receiver"/>
+            <column name="TRACE_INDEX" type="int" remarks=" trace count index"/>
+            <column name="DYNAMIC_FIELDS" type="json"/>
+            <column name="CREATE_BY" type="bigint"/>
+            <column name="MODIFIED_BY" type="bigint"/>
+            <column name="CREATE_TIME" type="TIMESTAMP"/>
+            <column name="MODIFIED_TIME" type="TIMESTAMP"/>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

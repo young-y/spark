@@ -11,8 +11,8 @@ package com.glory.spark.core.domain.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import jakarta.annotation.Nonnull;
-import org.springframework.core.convert.converter.Converter;
+import com.glory.foundation.domain.PersistableEnum;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * @author : YY
@@ -22,42 +22,61 @@ import org.springframework.core.convert.converter.Converter;
  */
 
 public enum RetryStrategy implements PersistableEnum<Integer> {
-    All("all",0)  //init
-    ,Fail("fail",1)  //fail
-    ,Retry("retry",2)
-    ;
+	All("all", 0)  //init
+	, Fail("fail", 1)  //fail
+	, Retry("retry", 2);
 
-    private final String name;
-    private final Integer value;
-    private RetryStrategy(String name,Integer value){
-        this.name = name;
-        this.value = value;
-    }
+	private final String name;
+	private final Integer value;
 
-    public Integer getValue() {
-        return value;
-    }
+	private RetryStrategy(String name, Integer value) {
+		this.name = name;
+		this.value = value;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Integer getValue() {
+		return value;
+	}
 
-    @Override
-    @JsonValue
-    public Integer value() {
-        return getValue();
-    }
+	public String getName() {
+		return name;
+	}
 
-    @JsonCreator
-    public static RetryStrategy fromPersistableValue(int value){
-        return PersistableEnum.valueOf(value, RetryStrategy.class);
-    }
+	@Override
+	@JsonValue
+	public Integer value() {
+		return getValue();
+	}
 
-    public static class RetryStrategyConverter implements Converter<Integer,RetryStrategy> {
+	@JsonCreator
+	public static RetryStrategy fromPersistableValue(int value) {
+		return PersistableEnum.valueOf(value, RetryStrategy.class);
+	}
 
-        @Override
-        public RetryStrategy convert(@Nonnull Integer source) {
-            return RetryStrategy.fromPersistableValue(source);
-        }
-    }
+	public static class RetryStrategyConverter implements AttributeConverter<RetryStrategy, Integer> {
+
+		/**
+		 * @param attribute
+		 * @return
+		 */
+		@Override
+		public Integer convertToDatabaseColumn(RetryStrategy attribute) {
+			if (null != attribute){
+				return attribute.getValue();
+			}
+			return null;
+		}
+
+		/**
+		 * @param dbData
+		 * @return
+		 */
+		@Override
+		public RetryStrategy convertToEntityAttribute(Integer dbData) {
+			if (null != dbData){
+				return RetryStrategy.fromPersistableValue(dbData);
+			}
+			return  null;
+		}
+	}
 }

@@ -11,12 +11,13 @@ package com.glory.spark.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.glory.spark.core.context.SparkContext;
-import com.glory.spark.core.domain.type.ResultStatus;
+import com.glory.data.jpa.domain.type.ResultStatus;
 import jakarta.annotation.Nonnull;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : YY
@@ -27,23 +28,25 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public class SparkResult<E> {
 
-    private ResultStatus status= ResultStatus.Success;
     private List<E> elements;
+    private ResultStatus status= ResultStatus.Success;
     private List<String> messages;
-
-    @JsonIgnore
-    private SparkContext sparkContext;
+	@JsonIgnore
+    private transient SparkContext context;
+    private transient boolean suspend = false;
 
     public List<E> getElements() {
         return elements;
     }
 
     public void setElements(List<E> elements) {
-        if (null ==this.elements){
-            this.elements = elements;
-        }else {
-            this.elements.addAll(elements);
-        }
+		Optional.ofNullable(elements).ifPresent(es->{
+			if (null ==this.elements){
+				this.elements = es;
+			}else {
+				this.elements.addAll(es);
+			}
+		});
     }
 
     @JsonIgnore
@@ -67,8 +70,9 @@ public class SparkResult<E> {
         return status;
     }
 
-    public void setStatus(ResultStatus status) {
+    public SparkResult<E> setStatus(ResultStatus status) {
         this.status = status;
+        return this;
     }
 
     public List<String> getMessages() {
@@ -93,17 +97,46 @@ public class SparkResult<E> {
     }
 
     @JsonIgnore
-    public SparkContext getSparkContext() {
-        return sparkContext;
+    public SparkContext getContext() {
+        return context;
     }
 
     @JsonIgnore
-    public void setSparkContext(SparkContext sparkContext) {
-        this.sparkContext = sparkContext;
+    public SparkResult<E> setContext(SparkContext context) {
+        this.context = context;
+        return this;
     }
 
     @JsonIgnore
-    public static <T> SparkResult<T> Success(){
-        return new SparkResult<>();
+    public boolean isSuspend() {
+        return suspend;
+    }
+
+    @JsonIgnore
+    public void setSuspend(boolean suspend) {
+        this.suspend = suspend;
+    }
+
+    public void updateResult(SparkResult<E> result){
+        Optional.ofNullable(result).ifPresent(r->{
+            if (ResultStatus.Success ==r.getStatus()){
+                setElements(r.getElements());
+            }else {
+                if (getStatus().getValue() < r.getStatus().getValue()){
+                    setStatus(r.getStatus());
+                }
+                setMessages(r.getMessages());
+            }
+        });
+    }
+
+    @JsonIgnore
+    public static <E,T> SparkResult<E> Success(SparkContext<T> context){
+        return new SparkResult<E>().setContext(context);
+    }
+
+    @JsonIgnore
+    public static <E,T> SparkResult<E> Fail(SparkContext<T> context){
+        return new SparkResult<E>().setContext(context).setStatus(ResultStatus.Fail);
     }
 }

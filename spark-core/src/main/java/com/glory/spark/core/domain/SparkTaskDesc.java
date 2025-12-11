@@ -10,8 +10,10 @@ package com.glory.spark.core.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.glory.foundation.domain.PropertyDesc;
 import com.glory.spark.core.context.SparkContext;
-import com.glory.spark.core.domain.type.ExceptionStrategy;
+import com.glory.spark.core.domain.type.TaskStatus;
+import com.glory.spark.core.snapshot.domain.bo.SnapshotDetailBo;
 import com.glory.spark.core.utils.DateUtils;
 import jakarta.annotation.Nonnull;
 import org.springframework.util.Assert;
@@ -29,7 +31,7 @@ import java.util.Optional;
  */
 
 @SuppressWarnings({"rawtypes","unchecked"})
-public class SparkTaskDesc implements PropertyDesc{
+public class SparkTaskDesc implements PropertyDesc {
     private String sparkCode;
     private String taskCode;
     private String type;
@@ -42,6 +44,7 @@ public class SparkTaskDesc implements PropertyDesc{
     private LocalDateTime endEffectiveTime;
     private final Map<String,Object> properties = new HashMap<>(16);
     private transient SparkContext context;
+    private transient SnapshotDetailBo detail;
     public String getSparkCode() {
         return sparkCode;
     }
@@ -152,6 +155,25 @@ public class SparkTaskDesc implements PropertyDesc{
     }
 
     @JsonIgnore
+    public SnapshotDetailBo getDetail() {
+        return detail;
+    }
+
+    @JsonIgnore
+    public void setDetail(SnapshotDetailBo detail) {
+        this.detail = detail;
+    }
+
+	@JsonIgnore
+	public void updateDetailStatus(TaskStatus status,String message){
+		Optional.ofNullable(this.detail).ifPresent(d->{
+			if (TaskStatus.Compensate != d.getStatus()){
+				d.setStatus(status);
+				d.setMessage(message);
+			}
+		});
+	}
+    @JsonIgnore
     public  SparkTaskDesc addProperty(@Nonnull String key, @Nonnull Object value){
         properties.put(key, value);
         return this;
@@ -164,14 +186,27 @@ public class SparkTaskDesc implements PropertyDesc{
     }
 
     @JsonIgnore
+    public String identity(){
+        return String.format("Task[%s:%s:%s]",sparkCode,type,taskCode);
+    }
+
+    @JsonIgnore
     public<T> SparkContext<T> copy(){
+        Assert.isTrue(null != context,"SparkContext is null.");
+        Assert.hasLength(taskCode,"TaskCode is empty.");
+        context.setTaskCode(taskCode);
         SparkContext<T> sparkContext = context.copy();
-        sparkContext.setTaskCode(taskCode);
-        sparkContext.setProperties(properties);
         Optional.ofNullable(exceptionStrategy).ifPresent(sparkContext::setExceptionStrategy);
         sparkContext.setTaskDesc(this);
-        sparkContext.setSnapshotInfo(context.getSnapshotInfo());
+		this.setContext(sparkContext);
         return sparkContext;
     }
 
+    public static SparkTaskDesc create(@Nonnull SparkTypeDesc typeDesc){
+        SparkTaskDesc taskDesc = new SparkTaskDesc();
+        taskDesc.setSparkCode(typeDesc.getSparkCode());
+        taskDesc.setType(typeDesc.getType());
+        taskDesc.setProperties(typeDesc.getProperties());
+        return taskDesc;
+    }
 }

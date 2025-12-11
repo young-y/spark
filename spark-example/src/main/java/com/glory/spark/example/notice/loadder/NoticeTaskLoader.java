@@ -29,14 +29,17 @@ import java.util.List;
 public class NoticeTaskLoader implements TaskLoader {
     @Override
     public <T> List<SparkTaskDesc> load(SparkContext<T> context) {
-        return List.of(generate(context.getTypeDesc()));
+        return List.of(generate(context.getTypeDesc(),0),generate(context.getTypeDesc(),1));
     }
 
-    private SparkTaskDesc generate(SparkTypeDesc typeDesc){
+    private SparkTaskDesc generate(SparkTypeDesc typeDesc,int index){
         SparkTaskDesc taskDesc = new SparkTaskDesc();
-        BeanUtils.copyProperties(typeDesc,taskDesc);
-        taskDesc.setTaskCode("demo_task");
-        taskDesc.setTaskName("test task");
+//        BeanUtils.copyProperties(typeDesc,taskDesc);
+        taskDesc.setTaskCode("notice_task_"+index);
+        taskDesc.setTaskName("notice task");
+		taskDesc.setSparkCode(typeDesc.getSparkCode());
+		taskDesc.setType(typeDesc.getType());
+		taskDesc.setContext(typeDesc.getContext());
         return taskDesc;
     }
 
