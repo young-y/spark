@@ -11,7 +11,7 @@ package com.glory.http.client.service.router;
 
 import jakarta.annotation.Nonnull;
 
-/**
+/** the subclass is a route service when routing invoke
  * @author : YY
  * @date : 2025/12/8
  * @descprition :

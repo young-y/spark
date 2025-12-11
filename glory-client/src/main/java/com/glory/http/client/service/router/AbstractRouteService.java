@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.function.Predicate;
 
-/**
+/** when invoke at distribute and center mode,need routed local and remote service
  * @author : YY
  * @date : 2025/12/4
  * @descprition :

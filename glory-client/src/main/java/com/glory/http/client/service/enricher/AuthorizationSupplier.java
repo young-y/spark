@@ -14,7 +14,7 @@ import com.glory.http.client.service.wrapper.HttpRequestWrapper; /**
  * @author : YY
  * @date : 2025/11/23
  * @descprition :
- *
+ *	provide token to http request,{@linkplain AuthentificationEnricher}
  */
 @FunctionalInterface
 public interface AuthorizationSupplier {

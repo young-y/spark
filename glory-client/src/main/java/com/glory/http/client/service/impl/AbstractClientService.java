@@ -32,7 +32,7 @@ import java.util.List;
  * @author : YY
  * @date : 2025/11/21
  * @descprition :
- *
+ *	This is an abstract class that provides some basic function for the Request class.
  */
 
 public abstract class AbstractClientService implements ClientService {
@@ -40,20 +40,20 @@ public abstract class AbstractClientService implements ClientService {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	protected List<HttpRequestEnricher> enrichers;
 	@Value("${glory.client.http.log:true}")
-	private boolean logging;
+	private boolean logging;//whether records logs for request,default record
 	@Autowired
 	private Environment env;
 	@Autowired
-	private RestTemplate restTemplate;
+	private RestTemplate restTemplate;//default RestTemplate
 
 	@Override
 	public <T, S> T exchange(HttpRequestWrapper<T, S> wrapper) {
 		StopWatch watch = new StopWatch();
 		watch.start();
 		T response = null;
-		enrichHttpRequest(wrapper);
+		enrichHttpRequest(wrapper);//enrich the http request
 		HttpEntity<S> entity = wrapper.getHttpEntity();
-		RestTemplate restTemplate = getRestTemplate(wrapper);
+		RestTemplate restTemplate = getRestTemplate(wrapper);//get effective restTemplate,wrapper first.
 		Assert.notNull(restTemplate, "Client restTemplate is null");
 		String url = wrapper.getUrlWrapper().formatUrl(env);
 		logging(true, url, wrapper);
@@ -68,6 +68,13 @@ public abstract class AbstractClientService implements ClientService {
 		return response;
 	}
 
+	/**
+	 * obtain the RestTemplate,
+	 * @param wrapper
+	 * @return
+	 * @param <T>
+	 * @param <S>
+	 */
 	protected <T, S> RestTemplate getRestTemplate(HttpRequestWrapper<T, S> wrapper) {
 		return null==wrapper.getRestTemplate()?restTemplate:wrapper.getRestTemplate();
 	}

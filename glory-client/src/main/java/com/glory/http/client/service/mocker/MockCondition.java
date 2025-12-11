@@ -11,7 +11,7 @@ package com.glory.http.client.service.mocker;
 
 import java.lang.reflect.Method;
 
-/**
+/** judging whether Mock is activated under complex conditions
  * @author : YY
  * @date : 2025/11/21
  * @descprition :
@@ -20,6 +20,12 @@ import java.lang.reflect.Method;
 
 public interface MockCondition {
 
+	/**
+	 * Judging whether mock is activated.
+	 * @param method  target method
+	 * @param argus  target method arguments
+	 * @return
+	 */
 	boolean match(Method method,Object[] argus);
 
 	class DefaultCondition implements MockCondition {

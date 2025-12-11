@@ -53,6 +53,11 @@ public class ClientMockerAspect {
 		return point.proceed();
 	}
 
+	/**
+	 * obtain the mocker bean
+	 * @param observer
+	 * @return
+	 */
 	private ClientMocker getClientMocker(MockObserver observer) {
 		Class<? extends ClientMocker> mockerClass = observer.mockerClass();
 		ClientMocker clientMocker = null;
@@ -66,6 +71,13 @@ public class ClientMockerAspect {
 		return clientMocker;
 	}
 
+	/**
+	 * Judge whether mock is activated,condition property or condition class,class is first.
+	 * @param mock
+	 * @param argus
+	 * @param method
+	 * @return
+	 */
 	private boolean conditionMatch(MockObserver mock, Object[] argus,Method method) {
 		if (MockCondition.DefaultCondition.class != mock.conditionClass()) {
 			MockCondition mockCondition = BeanUtils.instantiateClass(mock.conditionClass());

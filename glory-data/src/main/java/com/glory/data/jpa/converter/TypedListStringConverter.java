@@ -14,7 +14,7 @@ import jakarta.persistence.AttributeConverter;
 
 import java.util.List;
 
-/**
+/**List<String> to json string and
  * @author : YY
  * @date : 2025/11/10
  * @descprition :

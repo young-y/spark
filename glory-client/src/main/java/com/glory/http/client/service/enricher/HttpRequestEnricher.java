@@ -13,7 +13,7 @@ import com.glory.http.client.service.wrapper.HttpRequestWrapper; /**
  * @author : YY
  * @date : 2025/11/21
  * @descprition :
- *
+ * enrich operation for specific {@link HttpRequestWrapper},eg:authorization and specific http header
  */
 @FunctionalInterface
 public interface HttpRequestEnricher {
