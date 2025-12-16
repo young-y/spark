@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.glory.foundation.jackson.type;
+package com.glory.foundation.crypto.annotation;
 
 
 import com.fasterxml.jackson.core.JacksonException;
@@ -16,20 +16,21 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import com.glory.foundation.crypto.CryptoHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * @author : YY
- * @date : 2025/11/29
+ * @date : 2025/12/13
  * @descprition :
  *
  */
 
-public class WithTypeDeserializer extends JsonDeserializer<Object> implements ContextualDeserializer {
+public class SecretDeserializer extends JsonDeserializer<String> implements ContextualDeserializer {
 	/**
 	 * @param p    Parser used for reading JSON content
 	 * @param ctxt Context that can be used to access information about
@@ -39,9 +40,8 @@ public class WithTypeDeserializer extends JsonDeserializer<Object> implements Co
 	 * @throws JacksonException
 	 */
 	@Override
-	public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
-
-		return null;
+	public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+		return "";
 	}
 
 	/**
@@ -54,75 +54,22 @@ public class WithTypeDeserializer extends JsonDeserializer<Object> implements Co
 	 * @return
 	 * @throws JsonMappingException
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
-		if (Objects.nonNull(property)) {
-			WithType annotation = property.getAnnotation(WithType.class);
-			if (null != annotation) {
-				Class<?> rawClass = property.getType().getRawClass();
-				WithTypeReference reference = new WithTypeReference(property);
-				Function<Object, Object> transmit = null;
-				if (Set.class.isAssignableFrom(rawClass)) {
-					transmit = (objects) -> {
-						if (objects instanceof Set os) {
-							return os.stream().map(o -> {
-								if (o instanceof WithTypeObject ot) {
-									return ot.getRawTypeObject();
-								}
-								return o;
-							}).collect(Collectors.toSet());
-						}
-						return objects;
-					};
-				} else if (List.class.isAssignableFrom(rawClass)) {
-					transmit = (objects) -> {
-						if (objects instanceof List os) {
-							return os.stream().map(o -> {
-								if (o instanceof WithTypeObject ot) {
-									return ot.getRawTypeObject();
-								}
-								return o;
-							}).toList();
-						}
-						return objects;
-					};
-				} else if (Map.class.isAssignableFrom(rawClass)) {
-					transmit = (objects) -> {
-						if (objects instanceof Map os) {
-							Map map = new HashMap();
-							os.forEach((k, v) -> {
-								if (v instanceof WithTypeObject ot) {
-									map.put(k, ot.getRawTypeObject());
-								} else {
-									map.put(k, v);
-								}
-							});
-							return map;
-						}
-						return objects;
-					};
-				}else {
-					reference.setRawClass(WithTypeObject.class);
-					transmit = object -> {
-						if (object instanceof WithTypeObject ot){
-								return ot.getRawTypeObject();
-						}
-						return object;
-					};
-				}
-				reference.setTransmit(transmit);
-				return new ObjectWithTypeDeserializer(reference);
+		if(Objects.nonNull(property)){
+			Secret secret = property.getAnnotation(Secret.class);
+			if (null != secret){
+				return new SecretAnnotationDeserializer(new SecretReference(secret, property.getType()));
 			}
 		}
 		return ctxt.findContextualValueDeserializer(property.getType(), property);
 	}
 
-	public static class ObjectWithTypeDeserializer extends JsonDeserializer<Object> {
+	public static class SecretAnnotationDeserializer extends JsonDeserializer<Object>{
+		private Logger logger = LoggerFactory.getLogger(getClass());
+		private final SecretReference reference;
 
-		private final WithTypeReference reference;
-
-		public ObjectWithTypeDeserializer(WithTypeReference reference) {
+		public SecretAnnotationDeserializer(SecretReference reference) {
 			this.reference = reference;
 		}
 
@@ -138,7 +85,15 @@ public class WithTypeDeserializer extends JsonDeserializer<Object> implements Co
 		public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
 			JsonDeserializer<Object> deserializer = ctxt.findContextualValueDeserializer(reference.getJavaType(), null);
 			Object object = deserializer.deserialize(p, ctxt);
-			return reference.getTransmit().apply(object);
+			if (Objects.nonNull(object)){
+				Secret secret = reference.getSecret();
+				if (object instanceof String){
+					return CryptoHelper.decrypt(object.toString(), secret.algorithm(),true);
+				}else {
+					logger.info("Secret deserializer type can't support.");
+				}
+			}
+			return object;
 		}
 	}
 }

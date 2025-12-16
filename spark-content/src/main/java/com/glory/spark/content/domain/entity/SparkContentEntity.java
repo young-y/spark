@@ -12,10 +12,10 @@ package com.glory.spark.content.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.glory.data.jpa.converter.TypedListStringConverter;
 import com.glory.data.jpa.domain.entity.DomainEntityWithDynamicFields;
+import com.glory.foundation.crypto.converter.SecretSystemStringConverter;
 import com.glory.foundation.jackson.type.converter.WithTypeMapConverter;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 
 import java.time.LocalDateTime;
 import java.util.*;
