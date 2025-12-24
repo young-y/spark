@@ -6,11 +6,11 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.glory.foundation.jackson.type.converter;
+package com.glory.foundation.type.converter;
 
 
 import com.glory.foundation.formater.FormatHelper;
-import com.glory.foundation.jackson.type.WithTypeObject;
+import com.glory.foundation.type.WithTypeObject;
 import jakarta.persistence.AttributeConverter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

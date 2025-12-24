@@ -103,7 +103,7 @@ public class RsaCryptoConfiguration {
 
 	@Bean("rasEncryptor")
 	@ConditionalOnMissingBean(name = "rasEncryptor")
-	public Encryptor rasEncryptor(@Qualifier("publicKeyProvider") RSAKeyProvider provider){
+	public Encryptor<String> rasEncryptor(@Qualifier("publicKeyProvider") RSAKeyProvider provider){
 		return str -> {
 			if (StringUtils.hasLength(str)){
 				try{

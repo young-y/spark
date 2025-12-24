@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class HmacSha256Crypto implements Crypto {
+public class HmacSha256Crypto implements Crypto<String> {
 
 	@Resource(name = "hmacsha256Encryptor")
 	private Encryptor encryptor;

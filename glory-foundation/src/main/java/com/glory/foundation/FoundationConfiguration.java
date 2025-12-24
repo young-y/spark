@@ -9,6 +9,8 @@
 package com.glory.foundation;
 
 
+import com.glory.foundation.context.AppContext;
+import com.glory.foundation.desensitize.condition.DesensitizePredicate;
 import com.glory.foundation.formater.DateFormater;
 import com.glory.foundation.formater.GloryDateFormater;
 import com.glory.foundation.formater.GloryObjectFormater;
@@ -28,6 +30,8 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 public class FoundationConfiguration {
 
+	public static final String DESENSITIZE_ACTIVITY = "DESENSITIZE_ACTIVITY";
+
 	@Bean
 	@ConditionalOnMissingBean
 	public ObjectFormater objectFormater(){
@@ -38,5 +42,11 @@ public class FoundationConfiguration {
 	@ConditionalOnMissingBean
 	public DateFormater dateFormater(){
 		return new GloryDateFormater();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public DesensitizePredicate desensitizePredicate(){
+		return ()-> AppContext.get(DESENSITIZE_ACTIVITY, true);
 	}
 }

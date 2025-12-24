@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.glory</groupId>
             <artifactId>glory-client</artifactId>
-            <version>${project.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

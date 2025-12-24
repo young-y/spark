@@ -35,7 +35,7 @@ public class Sha256CryptoConfiguration {
 
 	@Bean("sha256Encryptor")
 	@ConditionalOnMissingBean(name = "sha256Encryptor")
-	public Encryptor sha256Encryptor() {
+	public Encryptor<String> sha256Encryptor() {
 		return str -> {
 			if (StringUtils.hasLength(str)) {
 				try {

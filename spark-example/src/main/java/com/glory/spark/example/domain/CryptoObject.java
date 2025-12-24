@@ -9,7 +9,14 @@
 package com.glory.spark.example.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.glory.foundation.crypto.annotation.Secret;
+import com.glory.foundation.desensitize.Desensitize;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author : YY
@@ -20,9 +27,11 @@ import com.glory.foundation.crypto.annotation.Secret;
 
 public class CryptoObject {
 
+	@Desensitize
 	private String name;
 	@Secret
 	private String password;
+	private Map<String,Object> properties = new HashMap<>();
 
 	public String getName() {
 		return name;
@@ -38,5 +47,20 @@ public class CryptoObject {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@JsonAnyGetter
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+	@JsonIgnore
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+
+	@JsonAnySetter
+	public void addProperty(String key,Object value){
+		this.properties.put(key, value);
 	}
 }

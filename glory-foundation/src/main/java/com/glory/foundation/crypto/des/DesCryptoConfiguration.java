@@ -47,7 +47,7 @@ public class DesCryptoConfiguration {
 
 	@Bean("desEncryptor")
 	@ConditionalOnMissingBean(name = "desEncryptor")
-	public Encryptor desEncryptor(){
+	public Encryptor<String> desEncryptor(){
 		return str -> {
 			if (StringUtils.hasLength(str)){
 				try {

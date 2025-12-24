@@ -6,29 +6,31 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.glory.foundation.jackson.type;
+package com.glory.foundation.desensitize;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.glory.foundation.desensitize.jackson.DesensitizeSerializer;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Map;
 
 /**
  * @author : YY
- * @date : 2025/11/28
+ * @date : 2025/12/17
  * @descprition :
  *
  */
 @JacksonAnnotationsInside
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-@JsonSerialize(using = WithTypeSerializer.class)
-@JsonDeserialize(using = WithTypeDeserializer.class)
-public @interface WithType {
-
- }
+@JsonSerialize(using = DesensitizeSerializer.class)
+public @interface Desensitize {
+	String algorithm() default "PattenMask";
+	String patten() default "";
+	String replacement() default "";
+	int minLength() default 4;
+	boolean withPrefix() default false;
+}

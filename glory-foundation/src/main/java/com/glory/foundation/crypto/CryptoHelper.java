@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,18 +34,21 @@ public class CryptoHelper {
 
 	private final static Map<String, Crypto> cryptoMap = new HashMap<>(8);
 
-	public static Crypto getCrypto(@Nonnull String algorithm) {
-		return cryptoMap.get(algorithm);
+	public static Crypto getCrypto(String algorithm) {
+		if (StringUtils.hasLength(algorithm)){
+			return cryptoMap.get(algorithm);
+		}
+		return cryptoMap.get(defaultAlgorithm);
 	}
 
 	public static String encryptSystem(@Nonnull String src, boolean withPrefix) {
 		return encrypt(src,defaultAlgorithm,withPrefix);
 	}
-	public static String encrypt(@Nonnull String src, @Nonnull String algorithm) {
+	public static String encrypt(@Nonnull String src,  String algorithm) {
 		return encrypt(src, algorithm, false);
 	}
 
-	public static String encrypt(@Nonnull String src, @Nonnull String algorithm, boolean withPrefix) {
+	public static String encrypt(@Nonnull String src, String algorithm, boolean withPrefix) {
 		Crypto crypto = getCrypto(algorithm);
 		Assert.notNull(crypto, algorithm + " can't found Crypto.");
 		return getPrefix(algorithm, withPrefix) + crypto.encrypt(src);
@@ -53,11 +57,11 @@ public class CryptoHelper {
 	public static String decryptSystem(@Nonnull String ciphertext, boolean withPrefix) {
 		return decrypt(ciphertext,defaultAlgorithm,withPrefix);
 	}
-	public static String decrypt(@Nonnull String ciphertext, @Nonnull String algorithm) {
+	public static String decrypt(@Nonnull String ciphertext, String algorithm) {
 		return decrypt(ciphertext, algorithm, false);
 	}
 
-	public static String decrypt(@Nonnull String ciphertext, @Nonnull String algorithm, boolean withPrefix) {
+	public static String decrypt(@Nonnull String ciphertext,  String algorithm, boolean withPrefix) {
 		Crypto crypto = getCrypto(algorithm);
 		Assert.notNull(crypto, algorithm + " can't found Crypto.");
 		if (withPrefix) {

@@ -80,3 +80,21 @@ glory:
         file: /crypto/rsa/rsa.public
       private:
         file: /crypto/rsa/rsa.private
+  desensitize:
+    rules[0]:
+      patten: ^(.{2}).*$
+      replacement: $1*****
+      names: test
+      excludes: case
+    rules[1]:
+#      algorithm: AES
+      patten: ^(.{3}).*$
+      replacement: $1###
+      names: case2
+      min-length: 4
+      with-prefix: true
+    rules[2]:
+      algorithm: AES
+      patten: ^(.{1}).*$
+      replacement: $1*****
+      names: name

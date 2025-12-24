@@ -69,6 +69,7 @@
         <dependency>
             <groupId>com.glory</groupId>
             <artifactId>glory-foundation</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

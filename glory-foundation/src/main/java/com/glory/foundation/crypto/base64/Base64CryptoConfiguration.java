@@ -31,7 +31,7 @@ public class Base64CryptoConfiguration {
 
 	@Bean("base64Encryptor")
 	@ConditionalOnMissingBean(name = "base64Encryptor")
-	public Encryptor base64Encryptor() {
+	public Encryptor<String> base64Encryptor() {
 		return str -> {
 			if (StringUtils.hasLength(str)) {
 				return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));

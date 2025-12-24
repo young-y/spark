@@ -47,7 +47,7 @@ public class AesCryptoConfiguration {
 
 	@Bean("aesEncryptor")
 	@ConditionalOnMissingBean(name = "aesEncryptor")
-	public Encryptor aesEncryptor(){
+	public Encryptor<String> aesEncryptor(){
 		return str->{
 			if (StringUtils.hasLength(str)){
 				try{

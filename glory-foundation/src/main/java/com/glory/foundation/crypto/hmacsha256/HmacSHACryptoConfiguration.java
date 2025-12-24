@@ -39,7 +39,7 @@ public class HmacSHACryptoConfiguration {
 
 	@Bean("hmacsha256Encryptor")
 	@ConditionalOnMissingBean(name = "hmacsha256Encryptor")
-	public Encryptor hmacsha256Encryptor(){
+	public Encryptor<String> hmacsha256Encryptor(){
 		return str -> {
 			if (StringUtils.hasLength(str)){
 				try{

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.glory.data.jpa.domain.DynamicFieldSupport;
-import com.glory.foundation.jackson.type.WithType;
+import com.glory.foundation.type.WithType;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;

@@ -6,16 +6,16 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.glory.foundation.crypto;
+package com.glory.foundation.desensitize.condition;
 
 
 /**
  * @author : YY
- * @date : 2025/12/11
+ * @date : 2025/12/24
  * @descprition :
  *
  */
-
-public interface Crypto<T> extends Encryptor<T>,Decryptor{
-	String algorithm();
+@FunctionalInterface
+public interface DesensitizePredicate {
+	boolean test();
 }

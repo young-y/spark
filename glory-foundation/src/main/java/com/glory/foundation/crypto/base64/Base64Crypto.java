@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class Base64Crypto implements Crypto {
+public class Base64Crypto implements Crypto<String> {
 
 	@Resource(name = "base64Encryptor")
 	private Encryptor encryptor;

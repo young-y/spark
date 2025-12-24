@@ -34,7 +34,7 @@ public class Md5CryptoConfiguration {
 	private boolean formatHex;
 	@Bean("md5Encryptor")
 	@ConditionalOnMissingBean(name = "md5Encryptor")
-	public Encryptor sha256Encryptor() {
+	public Encryptor<String> sha256Encryptor() {
 		return str -> {
 			if (StringUtils.hasLength(str)) {
 				try {

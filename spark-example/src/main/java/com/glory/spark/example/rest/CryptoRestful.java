@@ -9,6 +9,8 @@
 package com.glory.spark.example.rest;
 
 
+import com.glory.foundation.FoundationConfiguration;
+import com.glory.foundation.context.AppContext;
 import com.glory.foundation.crypto.CryptoHelper;
 import com.glory.foundation.crypto.rsa.RSAKeyGenerator;
 import com.glory.foundation.crypto.rsa.RSAKeyProvider;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Key;
 import java.util.Base64;
+import java.util.Map;
 
 /**
  * @author : YY
@@ -81,5 +84,18 @@ public class CryptoRestful {
 		Key publicKey = publicKeyProvider.provide();
 		Key privateKey = privateKeyProvider.provide();
 		return CryptoResult.create(Base64.getEncoder().encodeToString(publicKey.getEncoded()),Base64.getEncoder().encodeToString(privateKey.getEncoded()));
+	}
+
+	@PostMapping("logback")
+	public CryptoResult testLogback(@RequestBody CryptoObject req){
+//		AppContext.set(FoundationConfiguration.DESENSITIZE_ACTIVITY,false);
+		logger.info(">> request ={}",req);
+		return CryptoResult.create(req.getPassword());
+	}
+
+	@PostMapping("/testmap")
+	public CryptoResult testMap(@RequestBody Map<String,Object> map){
+		logger.info(">> map ={}",map);
+		return CryptoResult.create("this is test");
 	}
 }

@@ -11,7 +11,7 @@ package com.glory.data.jpa.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.glory.foundation.jackson.type.converter.WithTypeMapConverter;
+import com.glory.foundation.type.converter.WithTypeMapConverter;
 import com.glory.data.jpa.domain.DynamicFieldSupport;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;

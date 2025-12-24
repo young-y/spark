@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class DesCrypto implements Crypto {
+public class DesCrypto implements Crypto<String> {
 
 	@Resource(name = "desEncryptor")
 	private Encryptor encryptor;

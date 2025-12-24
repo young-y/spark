@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class RsaCrypto implements Crypto {
+public class RsaCrypto implements Crypto <String>{
 
 	@Resource(name = "rasEncryptor")
 	private Encryptor encryptor;

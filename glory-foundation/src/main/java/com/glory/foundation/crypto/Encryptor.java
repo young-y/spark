@@ -16,8 +16,9 @@ package com.glory.foundation.crypto;
  *
  */
 @FunctionalInterface
-public interface Encryptor {
+public interface Encryptor <T>{
 
-	String encrypt(String str);
+
+	String encrypt(T str);
 
 }

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class Md5Crypto implements Crypto {
+public class Md5Crypto implements Crypto<String> {
 
 	@Resource(name = "md5Encryptor")
 	private Encryptor encryptor;

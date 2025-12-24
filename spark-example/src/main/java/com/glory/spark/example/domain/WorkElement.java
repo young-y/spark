@@ -9,8 +9,6 @@
 package com.glory.spark.example.domain;
 
 
-import com.glory.foundation.jackson.type.WithType;
-
 /**
  * @author : YY
  * @date : 2025/11/30

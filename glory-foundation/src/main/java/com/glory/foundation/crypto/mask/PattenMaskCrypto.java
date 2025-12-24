@@ -6,32 +6,32 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.glory.foundation.crypto.aes;
+package com.glory.foundation.crypto.mask;
 
 
 import com.glory.foundation.crypto.Crypto;
-import com.glory.foundation.crypto.CryptoConstant;
-import com.glory.foundation.crypto.Decryptor;
 import com.glory.foundation.crypto.Encryptor;
+import com.glory.foundation.crypto.CryptoContext;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
  * @author : YY
- * @date : 2025/12/11
+ * @date : 2025/12/22
  * @descprition :
  *
  */
-@Component
-public class AesCrypto implements Crypto<String> {
-	@Resource(name = "aesEncryptor")
-	private Encryptor encryptor;
-	@Resource(name = "aesDecryptor")
-	private Decryptor decryptor;
 
+@Component
+public class PattenMaskCrypto implements Crypto<CryptoContext> {
+	@Resource(name = "pattenMaskEncryptor")
+	private Encryptor<CryptoContext> encryptor;
+	/**
+	 * @return
+	 */
 	@Override
 	public String algorithm() {
-		return CryptoConstant.CRYPTO_RW_AES;
+		return "PattenMask";
 	}
 
 	/**
@@ -40,16 +40,15 @@ public class AesCrypto implements Crypto<String> {
 	 */
 	@Override
 	public String decrypt(String ciphertext) {
-		return decryptor.decrypt(ciphertext);
+		throw new RuntimeException("Mask can't support decrypt operation.");
 	}
 
 	/**
-	 * @param str
+	 * @param context
 	 * @return
 	 */
 	@Override
-	public String encrypt(String str) {
-		return encryptor.encrypt(str);
+	public String encrypt(CryptoContext context) {
+		return encryptor.encrypt(context);
 	}
-
 }

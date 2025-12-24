@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.glory.foundation.jackson.type;
+package com.glory.foundation.type;
 
 
 import com.fasterxml.jackson.core.JacksonException;
