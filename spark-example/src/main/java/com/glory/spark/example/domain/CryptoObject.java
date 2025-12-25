@@ -31,6 +31,8 @@ public class CryptoObject {
 	private String name;
 	@Secret
 	private String password;
+	private String phone;
+	private String address;
 	private Map<String,Object> properties = new HashMap<>();
 
 	public String getName() {
@@ -47,6 +49,24 @@ public class CryptoObject {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Secret
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	@Secret
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	@JsonAnyGetter

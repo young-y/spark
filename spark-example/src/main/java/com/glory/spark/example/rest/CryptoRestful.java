@@ -12,6 +12,7 @@ package com.glory.spark.example.rest;
 import com.glory.foundation.FoundationConfiguration;
 import com.glory.foundation.context.AppContext;
 import com.glory.foundation.crypto.CryptoHelper;
+import com.glory.foundation.crypto.annotation.Secret;
 import com.glory.foundation.crypto.rsa.RSAKeyGenerator;
 import com.glory.foundation.crypto.rsa.RSAKeyProvider;
 import com.glory.spark.example.domain.CryptoObject;
@@ -93,9 +94,18 @@ public class CryptoRestful {
 		return CryptoResult.create(req.getPassword());
 	}
 
-	@PostMapping("/testmap")
-	public CryptoResult testMap(@RequestBody Map<String,Object> map){
-		logger.info(">> map ={}",map);
-		return CryptoResult.create("this is test");
+	@PostMapping("/method")
+	public CryptoObject testMap(@RequestBody CryptoObject obj){
+		logger.info(">> map ={}",obj);
+		obj.setAddress("test address");
+		return obj;
 	}
+
+	@GetMapping("/para/{text}")
+	public CryptoResult testPara(@Secret @PathVariable("text") String text){
+		logger.info(">> para text ={}",text);
+		return CryptoResult.create(text);
+	}
+
+
 }

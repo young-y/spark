@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  */
 @JacksonAnnotationsInside
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD,ElementType.PARAMETER,ElementType.METHOD})
 @JsonSerialize(using = SecretSerializer.class)
 @JsonDeserialize(using = SecretDeserializer.class)
 public @interface Secret {
