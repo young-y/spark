@@ -11,9 +11,7 @@ package com.glory.spark.core.snapshot.listener;
 
 import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.domain.SparkTaskDesc;
-import com.glory.spark.core.domain.type.TaskStatus;
 import com.glory.spark.core.snapshot.domain.bo.SnapshotBo;
-import com.glory.spark.core.snapshot.domain.bo.SnapshotDetailBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

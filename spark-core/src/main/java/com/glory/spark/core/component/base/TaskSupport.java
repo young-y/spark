@@ -20,14 +20,13 @@ import java.util.List;
  *
  */
 
-public interface TaskSupport extends SparkCodeSupport{
+public interface TaskSupport extends SparkTypeSupport{
     default List<String> supportTasks(){
         return List.of();
     }
 
 
-
     default boolean match(SparkContext<?> context){
-        return  match(supportTasks(), context.getTaskCode()) &&SparkCodeSupport.super.match(context);
+        return  match(supportTasks(), context.getTaskCode()) &&SparkTypeSupport.super.match(context);
     }
 }

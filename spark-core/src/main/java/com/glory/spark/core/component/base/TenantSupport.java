@@ -21,14 +21,14 @@ import java.util.List;
  *
  */
 
-public interface TenantSupport extends SparkSupport{
+public interface TenantSupport extends Selector{
 
     default List<String> supportTenants(){
         return List.of();
     }
 
     default boolean match(SparkContext<?> context){
-        return  match(supportTenants(), AppContext.getTenantCode()) && SparkSupport.super.match(context);
+        return  match(supportTenants(), AppContext.getTenantCode());
     }
 
 }

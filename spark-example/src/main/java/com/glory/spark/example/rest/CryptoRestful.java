@@ -90,7 +90,7 @@ public class CryptoRestful {
 	@PostMapping("logback")
 	public CryptoResult testLogback(@RequestBody CryptoObject req){
 //		AppContext.set(FoundationConfiguration.DESENSITIZE_ACTIVITY,false);
-		logger.info(">> request ={}",req);
+		logger.info(">> request ={},test [{}]",req,req.getPassword());
 		return CryptoResult.create(req.getPassword());
 	}
 

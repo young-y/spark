@@ -32,7 +32,7 @@ public class SparkHelper {
     @Value("${server.servlet.context-path:}")
     private String contextPath;//current app contextPath if setting
     @Value("${spark.snapshot.master-app-name:}")
-    private String masterAppName;// it' the app name of master node  if deploy master mode.
+    private String masterAppName;// it' the app name of master node ，if deploy master mode.
 	@Value("${spark.content.app-name:}")
 	private String contentAppName;
 	@Value("${spark.snapshot.enabled:true}")
@@ -65,9 +65,9 @@ public class SparkHelper {
         return deployMaster;
     }
 
-    public boolean isSnapshot() {
-        return snapshot;
-    }
+//    public boolean isSnapshot() {
+//        return snapshot;
+//    }
 
 	public String getContentAppName() {
 		return contentAppName;

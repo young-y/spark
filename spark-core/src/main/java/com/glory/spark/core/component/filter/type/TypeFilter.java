@@ -9,6 +9,7 @@
 package com.glory.spark.core.component.filter.type;
 
 
+import com.glory.spark.core.component.base.SparkTypeSupport;
 import com.glory.spark.core.component.base.TenantSupport;
 import com.glory.spark.core.context.SparkContext;
 import org.springframework.core.annotation.Order;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
  *
  */
 
-public interface TypeFilter extends TenantSupport {
+public interface TypeFilter extends SparkTypeSupport {
 
     <T>boolean filter(SparkContext<T> context);
 

@@ -52,8 +52,5 @@ public class TestStorageHandler implements StorageHandler<SparkContentBo> {
 		logger.info(">> storage {}", FormatHelper.toJson(result.getElements()));
 	}
 
-	@Override
-	public List<String> supportSparkCodes() {
-		return List.of("testSpark");
-	}
+
 }

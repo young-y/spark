@@ -62,8 +62,8 @@ public class SparkContentEntity extends DomainEntityWithDynamicFields {
 	@Column(name = "RECEIVERS")
 	@Convert(converter = TypedListStringConverter.class)
 	private List<String> receivers;
-	@Column(name = "TRACE_INDEX")
-	private int traceIndex;
+	@Column(name = "TRACK_INDEX")
+	private int trackIndex;
 	@Column(name = "CONTENT")
 	@Convert(converter = WithTypeMapConverter.class)
 	private final Map<String,Object> content = new HashMap<>();
@@ -201,12 +201,12 @@ public class SparkContentEntity extends DomainEntityWithDynamicFields {
 		Optional.ofNullable(content).ifPresent(this.content::putAll);
 	}
 
-	public int getTraceIndex() {
-		return traceIndex;
+	public int getTrackIndex() {
+		return trackIndex;
 	}
 
-	public void setTraceIndex(int traceIndex) {
-		this.traceIndex = traceIndex;
+	public void setTrackIndex(int trackIndex) {
+		this.trackIndex = trackIndex;
 	}
 
 	public List<SparkContentTrackEntity> getTracks() {

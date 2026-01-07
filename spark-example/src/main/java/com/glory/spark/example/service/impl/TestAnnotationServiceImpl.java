@@ -40,7 +40,7 @@ public class TestAnnotationServiceImpl implements TestAnnotationService {
 	 * @return
 	 */
 	@Override
-	@Spark(sparkCode ="test1127",type = "test",taskCode = "test1127",conditionClass = TestSparkCondition.class,occasion = SparkOccasion.After,catchException = true)
+	@Spark(sparkCode ="test1127",type = "test",taskCode = "test1127",conditionClass = TestSparkCondition.class,occasion = SparkOccasion.Before,catchException = true)
 	public Person savePerson(Person person) {
 		person.setMobile("110110110");
 		logger.info(">> test save person...");

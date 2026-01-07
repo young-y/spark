@@ -14,9 +14,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.glory.foundation.desensitize.DesensitizeHelper;
 import org.slf4j.helpers.MessageFormatter;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author : YY
  * @date : 2025/12/17
@@ -35,8 +32,10 @@ public class DesensitizeConverter extends ClassicConverter {
 		if (null == argumentArray || argumentArray.length == 0){
 			return event.getFormattedMessage();
 		}
-		List<Object> argus = Arrays.stream(argumentArray).map(DesensitizeHelper::desensitizeToJson).toList();
-		return MessageFormatter.format(event.getMessage(),argus.toArray()).getMessage();
+		for (int i = 0; i < argumentArray.length; i++) {
+			argumentArray[i] = DesensitizeHelper.desensitizeToJson(argumentArray[i]);
+		}
+		return MessageFormatter.arrayFormat(event.getMessage(),argumentArray).getMessage();
 	}
 
 }

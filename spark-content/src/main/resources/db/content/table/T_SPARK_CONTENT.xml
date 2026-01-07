@@ -41,7 +41,7 @@
 
             <column name="CONTENT" type="json"  remarks="json of content "/>
             <column name="RECEIVERS" type="json" remarks=" list of receiver"/>
-            <column name="TRACE_INDEX" type="int" remarks=" trace count index"/>
+            <column name="TRACK_INDEX" type="int" remarks=" trace count index"/>
             <column name="DYNAMIC_FIELDS" type="json"/>
             <column name="CREATE_BY" type="bigint"/>
             <column name="MODIFIED_BY" type="bigint"/>

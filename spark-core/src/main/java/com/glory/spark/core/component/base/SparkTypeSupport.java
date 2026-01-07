@@ -10,8 +10,6 @@ package com.glory.spark.core.component.base;
 
 
 import com.glory.spark.core.context.SparkContext;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ import java.util.List;
  *
  */
 
-public interface SparkSupport extends Selector{
+public interface SparkTypeSupport extends SparkCodeSupport{
 
     default List<String> supportTypes(){
         return List.of();
@@ -30,13 +28,7 @@ public interface SparkSupport extends Selector{
 
     @Override
     default boolean match(SparkContext<?> context){
-        return match(supportTypes(), context.getType());
+        return match(supportTypes(), context.getType())&&SparkCodeSupport.super.match(context);
     }
 
-    default boolean match(List<String> conditions, String key){
-        if (!CollectionUtils.isEmpty(conditions) && StringUtils.hasLength(key)){
-            return conditions.contains(key);
-        }
-        return true;
-    }
 }

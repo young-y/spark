@@ -40,7 +40,7 @@ public class SparkContentBo extends DomainBoWithDynamicFields {
 	private int status;//default 0:init,other specific re-planning
 	private LocalDateTime expireDate;//if that need effective date
 	private List<String> receivers;
-	private int traceIndex;
+	private int trackIndex;
 	private final Map<String,Object> content = new HashMap<>();
 
 	@Transient
@@ -180,12 +180,12 @@ public class SparkContentBo extends DomainBoWithDynamicFields {
 		return this;
 	}
 
-	public int getTraceIndex() {
-		return traceIndex;
+	public int getTrackIndex() {
+		return trackIndex;
 	}
 
-	public void setTraceIndex(int traceIndex) {
-		this.traceIndex = traceIndex;
+	public void setTrackIndex(int trackIndex) {
+		this.trackIndex = trackIndex;
 	}
 
 	public List<SparkContentTrackBo> getTracks() {

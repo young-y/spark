@@ -9,6 +9,7 @@
 package com.glory.spark.core.component.controller;
 
 
+import com.glory.spark.core.component.base.SparkTypeSupport;
 import com.glory.spark.core.component.base.TenantSupport;
 import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.domain.SparkResult;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
  *
  */
 
-public interface TypeController extends TenantSupport {
+public interface TypeController extends SparkTypeSupport {
 
     <T,E>SparkResult<E> process(SparkContext<T> context);
 

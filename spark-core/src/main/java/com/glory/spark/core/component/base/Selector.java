@@ -10,6 +10,10 @@ package com.glory.spark.core.component.base;
 
 
 import com.glory.spark.core.context.SparkContext;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * @author : YY
@@ -21,4 +25,11 @@ import com.glory.spark.core.context.SparkContext;
 public interface Selector {
 
     boolean match(SparkContext<?> context);
+
+	default boolean match(List<String> conditions, String key){
+		if (!CollectionUtils.isEmpty(conditions) && StringUtils.hasLength(key)){
+			return conditions.contains(key);
+		}
+		return true;
+	}
 }
