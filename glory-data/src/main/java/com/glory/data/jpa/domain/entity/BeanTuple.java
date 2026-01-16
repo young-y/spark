@@ -9,6 +9,7 @@
 package com.glory.data.jpa.domain.entity;
 
 
+import com.glory.data.jpa.domain.type.BooleanEnum;
 import com.glory.data.jpa.domain.type.PersistableEnumConverterFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.Tuple;
@@ -16,6 +17,7 @@ import jakarta.persistence.TupleElement;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterRegistry;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -193,8 +195,6 @@ public class BeanTuple implements Tuple {
 
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;
-		if (this.conversionService instanceof ConverterRegistry){
-			((ConverterRegistry) this.conversionService).addConverterFactory(new PersistableEnumConverterFactory());
-		}
+
 	}
 }

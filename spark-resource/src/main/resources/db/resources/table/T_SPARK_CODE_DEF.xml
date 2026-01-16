@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="T_SPARK_CODE_DEF_202601" author="generated" runAlways="false" >
+        <preConditions onFail="WARN" onError="WARN">
+            <not>
+                <tableExists tableName="T_SPARK_CODE_DEF"/>
+            </not>
+        </preConditions>
+        <createTable tableName="T_SPARK_CODE_DEF">
+            <column name="LIST_ID" type="bigint"  remarks="list id" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"  />
+            </column>
+            <column name="CODE" type="varchar(200)" remarks="spark code">
+                <constraints nullable="false" />
+            </column>
+            <column name="STATUS" type="int(4)" defaultValue="0" remarks=" config  status ,enabled or disabled">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(200)" remarks="the business name"/>
+            <column name="DESCRIPTION" type="varchar(500)" remarks="the business description"/>
+            <column name="EXCEPTION_STRATEGY" type="varchar(100)" remarks="exception strategy"/>
+            <column name="TENANT" type="varchar(200)" remarks="tenant code">
+                    <constraints nullable="false"/>
+            </column>
+            <column name="START_EFFECTIVE_TIME" type="TIMESTAMP" remarks="effective time start"/>
+            <column name="END_EFFECTIVE_TIME" type="TIMESTAMP" remarks="effective time end "/>
+
+            <column name="DYNAMIC_FIELDS" type="json"/>
+            <column name="CREATE_BY" type="bigint"/>
+            <column name="MODIFIED_BY" type="bigint"/>
+            <column name="CREATE_TIME" type="TIMESTAMP"/>
+            <column name="MODIFIED_TIME" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="U_SPARK_CODE_DEF_202601" author="generated">
+        <addUniqueConstraint columnNames="CODE,TENANT" tableName="T_SPARK_CODE_DEF"
+                             constraintName="U_SPARK_CODE_DEF_CODE_TENANT"/>
+    </changeSet>
+    <changeSet id="IDX_SPARK_CODE_DEF_202601" author="generated">
+        <createIndex tableName="T_SPARK_CODE_DEF" indexName="IDX_SPARK_CODE_DEF_CODE_TENANT">
+            <column name="CODE"/>
+            <column name="TENANT"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

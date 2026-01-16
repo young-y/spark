@@ -13,6 +13,11 @@ import com.glory.spark.core.component.provider.TypeProvider;
 import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.domain.SparkTypeDesc;
 import com.glory.spark.example.notice.NoticeConfig;
+import com.glory.spark.resource.domain.bo.ResourceRequest;
+import com.glory.spark.resource.domain.bo.SparkTypeDescBo;
+import com.glory.spark.resource.service.route.ResourcesRouteService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,22 +30,19 @@ import java.util.List;
  */
 @Component
 public class NoticeTypeProvider implements TypeProvider {
+	@Autowired
+	private ResourcesRouteService resourcesRouteService;
     @Override
     public <T> List<SparkTypeDesc> provide(SparkContext<T> context) {
-        return generate(context);
-    }
-
-    private<T> List<SparkTypeDesc> generate(SparkContext<T> context){
-        //TODO test
-        SparkTypeDesc desc = new SparkTypeDesc();
-        desc.setSparkCode(context.getSparkCode());
-        desc.setType(NoticeConfig.NOTICE_TYPE);
-		desc.setContext(context);
-		SparkTypeDesc desc1 = new SparkTypeDesc();
-		desc1.setSparkCode(context.getSparkCode());
-		desc1.setType("test");
-		desc1.setContext(context);
-        return List.of(desc,desc1);
+		ResourceRequest request = new ResourceRequest();
+		request.setCode(context.getSparkCode());
+		List<SparkTypeDescBo> sparkTypes = resourcesRouteService.findSparkTypes(request);
+		return sparkTypes.stream().map(type->{
+			SparkTypeDesc desc = new SparkTypeDesc();
+			BeanUtils.copyProperties(type,desc);
+			desc.setContext(context);
+			return desc;
+		}).toList();
     }
 
 }

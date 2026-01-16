@@ -36,34 +36,37 @@ spark:
       master: true
   content:
     app-name: spark1
+  resource:
+    app-name: sparkTest
   http:
     snapshot:
-      save: /test/save
-      find-by-id: /test/{snapshotId}/{includeDetail}
-      query: /test/query
+      save: /save
+      find-by-id: /{snapshotId}/{includeDetail}
+      query: /query
       detail:
-        save: /test/detail/save
-        find-by-id: /test/detail/{detailId}
-        find-snapshot-id: /test/detail/all/{snapshotId}
-        query: /test/detail/query
-        queryItems: /test/item/query
-        task-status: /test/detail/{taskCode}/{status}
+        save: /detail/save
+        find-by-id: /detail/{detailId}
+        find-snapshot-id: /detail/all/{snapshotId}
+        query: /detail/query
+        queryItems: /item/query
+        task-status: /detail/{taskCode}/{status}
     compensate:
-      transmit: /test/compensate/transmit
-      process: /test/compensate/item/process
+      transmit: /compensate/transmit
+      process: /compensate/item/process
     content:
-      save: /test/content/save
-      find: /test/content/find/{listId}
-      find-spark-status: /test/content/findBySparkCode/{sparkCode}/{status}
-      find-task-status: /test/content/findByTaskCode/{taskCode}/{status}
-      query: /test/content/query
+      save: /content/save
+      find: /content/find/{listId}
+      find-spark-status: /content/findBySparkCode/{sparkCode}/{status}
+      find-task-status: /content/findByTaskCode/{taskCode}/{status}
+      query: /content/query
     track:
-      save: /test/content/track/save
-      find: /test/content/track/find/{trackId}
-      find-content-id: /test/content/track/find/{contentId}/{status}
-      query: /test/content/track/query
+      save: /content/track/save
+      find: /content/track/find/{trackId}
+      find-content-id: /content/track/find/{contentId}/{status}
+      query: /content/track/query
     host:
-      spark1: http://localhost:8080/spark-demo
+      spark1: http://localhost:8080/spark-demo/test
+      sparkTest: http://localhost:8080/spark-demo/test
       spark: http://localhost:8080/spark-demo
   service:
     snapshot:

@@ -31,15 +31,10 @@ import java.util.List;
  */
 @Configuration
 @ComponentScan
-public class GloryDataConfiguration {
+public class GloryDataConfiguration{
 
 	@Value("${spark.glory.default.user-id:1}")
 	private long defaultUserId;
-
-	@Resource
-	private DataSource dataSource;
-	@Autowired(required = false)
-	private List<JpaPackageScanner> packageScanners;
 
 	@Bean
 	@ConditionalOnMissingBean

@@ -12,8 +12,11 @@ package com.glory.spark.example.domain;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.glory.foundation.crypto.CryptoConstant;
 import com.glory.foundation.crypto.annotation.Secret;
+import com.glory.foundation.crypto.converter.SecretSystemStringConverter;
 import com.glory.foundation.desensitize.Desensitize;
+import jakarta.persistence.Convert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class CryptoObject {
 	private String name;
 	@Secret
 	private String password;
+	@Convert(converter = SecretSystemStringConverter.class)
 	private String phone;
 	private String address;
 	private Map<String,Object> properties = new HashMap<>();
@@ -60,7 +64,7 @@ public class CryptoObject {
 		this.phone = phone;
 	}
 
-	@Secret
+	@Secret(algorithm = CryptoConstant.CRYPTO_RW_RSA)
 	public String getAddress() {
 		return address;
 	}

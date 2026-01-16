@@ -65,7 +65,8 @@ public class TestPersonTaskAssembler implements TaskAssembler<Person, SparkConte
 	}
 
 	@Override
-	public List<String> supportSparkCodes() {
-		return List.of("testSpark");
+	public List<String> supportTasks() {
+		return List.of("taskCode1");
 	}
+
 }

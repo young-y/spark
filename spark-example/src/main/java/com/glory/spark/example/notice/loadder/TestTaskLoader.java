@@ -14,6 +14,11 @@ import com.glory.spark.core.context.SparkContext;
 import com.glory.spark.core.domain.SparkTaskDesc;
 import com.glory.spark.core.domain.SparkTypeDesc;
 import com.glory.spark.example.notice.NoticeConfig;
+import com.glory.spark.resource.domain.bo.ResourceRequest;
+import com.glory.spark.resource.domain.bo.SparkTaskDescBo;
+import com.glory.spark.resource.service.route.ResourcesRouteService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,24 +31,20 @@ import java.util.List;
  */
 @Component
 public class TestTaskLoader implements TaskLoader {
+	@Autowired
+	private ResourcesRouteService resourcesRouteService;
     @Override
     public <T> List<SparkTaskDesc> load(SparkContext<T> context) {
-        return List.of(generate(context.getTypeDesc()));
+		ResourceRequest request = new ResourceRequest();
+		request.setType(context.getTypeDesc().getType());
+		List<SparkTaskDescBo> taskCodes = resourcesRouteService.findTaskCodes(request);
+		return taskCodes.stream().map(taskCode -> {
+			SparkTaskDesc desc = new SparkTaskDesc();
+			BeanUtils.copyProperties(taskCode, desc);
+			desc.setSparkCode(context.getSparkCode());
+			desc.setContext(context);
+			return desc;
+		}).toList();
     }
 
-    private SparkTaskDesc generate(SparkTypeDesc typeDesc){
-        SparkTaskDesc taskDesc = new SparkTaskDesc();
-//        BeanUtils.copyProperties(typeDesc,taskDesc);
-        taskDesc.setTaskCode("test_task_1512");
-        taskDesc.setTaskName("test task");
-		taskDesc.setSparkCode(typeDesc.getSparkCode());
-		taskDesc.setType(typeDesc.getType());
-		taskDesc.setContext(typeDesc.getContext());
-        return taskDesc;
-    }
-
-    @Override
-    public List<String> supportTypes() {
-        return List.of("test");
-    }
 }

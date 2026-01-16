@@ -12,6 +12,7 @@ package com.glory.spark.content.rest;
 import com.glory.spark.content.domain.bo.*;
 import com.glory.spark.content.service.route.SparkContentRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class SparkContentRestful {
 	private SparkContentRouteService routeService;
 
 	@PostMapping("/save")
+	@Transactional
 	public SparkContentBo saveAndUpdate(@RequestBody SparkContentBo contentBo) {
 		return routeService.saveAndUpdate(contentBo);
 	}
@@ -53,22 +55,23 @@ public class SparkContentRestful {
 	}
 
 	@PostMapping("/track/save")
-	public SparkContentTrackBo saveAndUpdate(SparkContentTrackBo trackBo) {
+	@Transactional
+	public SparkContentTrackBo saveAndUpdate(@RequestBody SparkContentTrackBo trackBo) {
 		return routeService.saveAndUpdate(trackBo);
 	}
 
 	@GetMapping("/track/find/{trackId}")
-	public SparkContentTrackBo findByTrackId(Long trackId) {
+	public SparkContentTrackBo findByTrackId(@PathVariable("trackId") Long trackId) {
 		return routeService.findByTrackId(trackId);
 	}
 
 	@GetMapping("/track/find/{contentId}/{status}")
-	public List<SparkContentTrackBo> findByContentId(Long contentId, Integer status) {
+	public List<SparkContentTrackBo> findByContentId(@PathVariable("contentId") Long contentId,@PathVariable("status") Integer status) {
 		return routeService.findByContentId(contentId, status);
 	}
 
 	@PostMapping("/track/query")
-	public SparkContentResponse<SparkContentTrackBo> queryTracks(SparkContentTrackRequest request) {
+	public SparkContentResponse<SparkContentTrackBo> queryTracks(@RequestBody SparkContentTrackRequest request) {
 		return routeService.queryTracks(request);
 	}
 

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.glory.data.jpa.domain.DynamicFieldSupport;
+import com.glory.foundation.domain.PropertyDesc;
 import com.glory.foundation.type.WithType;
 import jakarta.annotation.Nonnull;
 
@@ -27,7 +28,7 @@ import java.util.Optional;
  *
  */
 
-public abstract class DomainBoWithDynamicFields extends DomainBo implements DynamicFieldSupport {
+public abstract class DomainBoWithDynamicFields extends DomainBo implements DynamicFieldSupport , PropertyDesc {
 	@WithType
 	private final Map<String, Object> dynamicFields = new HashMap<>(8);
 
@@ -55,4 +56,8 @@ public abstract class DomainBoWithDynamicFields extends DomainBo implements Dyna
 		return this.dynamicFields.get(key);
 	}
 
+	@Override
+	public Object getValue(String key) {
+		return getFieldValue( key);
+	}
 }

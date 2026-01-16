@@ -15,4 +15,5 @@
 <!--    <includeAll path="./table/" relativeToChangelogFile="true"/>-->
     <include file="snapshot/db-update.xml" relativeToChangelogFile="true"/>
     <include file="content/db-update.xml" relativeToChangelogFile="true"/>
+    <include file="resources/db-update.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

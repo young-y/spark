@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="T_SPARK_RELATION_202601" author="generated" runAlways="false" >
+        <preConditions onFail="WARN" onError="WARN">
+            <not>
+                <tableExists tableName="T_SPARK_RELATION"/>
+            </not>
+        </preConditions>
+        <createTable tableName="T_SPARK_RELATION">
+            <column name="LIST_ID" type="bigint"  remarks="list id" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"  />
+            </column>
+            <column name="SPARK_ID" type="bigint" remarks="spark code def primary key">
+                <constraints nullable="false" />
+            </column>
+            <column name="TYPE_ID" type="bigint" remarks="spark type def primary key">
+                <constraints nullable="false" />
+            </column>
+            <column name="TENANT" type="varchar(200)" remarks="tenant code">
+                    <constraints nullable="false"/>
+            </column>
+            <column name="DYNAMIC_FIELDS" type="json"/>
+            <column name="CREATE_BY" type="bigint"/>
+            <column name="MODIFIED_BY" type="bigint"/>
+            <column name="CREATE_TIME" type="TIMESTAMP"/>
+            <column name="MODIFIED_TIME" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="F_SPARK_RELATION_FOR_202601" author="generated">
+        <addForeignKeyConstraint baseTableName="T_SPARK_RELATION" baseColumnNames="SPARK_ID"
+                                 constraintName="F_SPARK_RELATION_SPARK_ID" referencedTableName="T_SPARK_CODE_DEF"
+                                 referencedColumnNames="LIST_ID"/>
+        <addForeignKeyConstraint baseTableName="T_SPARK_RELATION" baseColumnNames="TYPE_ID"
+                                 constraintName="F_SPARK_RELATION_TYPE_ID" referencedTableName="T_SPARK_TYPE_DEF"
+                                 referencedColumnNames="LIST_ID"/>
+    </changeSet>
+    <changeSet id="U_SPARK_RELATION_TTS_202601" author="generated">
+        <addUniqueConstraint columnNames="SPARK_ID,TYPE_ID,TENANT" tableName="T_SPARK_RELATION"
+                             constraintName="U_SPARK_RELATION_SPARK_ID_TYPE_ID_TENANT"/>
+    </changeSet>
+    <changeSet id="IDX_SPARK_RELATION_202601" author="generated" >
+        <createIndex tableName="T_SPARK_RELATION" indexName="IDX_SPARK_RELATION_SPARK_ID">
+            <column name="SPARK_ID"/>
+        </createIndex>
+        <createIndex tableName="T_SPARK_RELATION" indexName="IDX_SPARK_RELATION_TYPE_ID">
+            <column name="TYPE_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

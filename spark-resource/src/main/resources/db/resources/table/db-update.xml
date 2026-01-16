@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+        <include file="T_SPARK_CODE_DEF.xml" relativeToChangelogFile="true"/>
+        <include file="T_SPARK_TYPE_DEF.xml" relativeToChangelogFile="true"/>
+        <include file="T_SPARK_RELATION.xml" relativeToChangelogFile="true"/>
+        <include file="T_SPARK_TASK_DEF.xml" relativeToChangelogFile="true"/>
+        <include file="T_SPARK_TASK_RELATION.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
